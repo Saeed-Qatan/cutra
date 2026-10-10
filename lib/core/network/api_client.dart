@@ -1,27 +1,33 @@
-/// Abstraction for network client HTTP requests
+/// Abstract HTTP client interface for network requests.
 abstract class ApiClient {
-  /// GET request contract
-  Future<Map<String, dynamic>> get(String endpoint);
-
-  /// POST request contract
-  Future<Map<String, dynamic>> post(
-    String endpoint, {
-    Map<String, dynamic>? body,
+  /// Perform HTTP GET request
+  Future<dynamic> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
   });
-}
 
-/// Dummy implementation of ApiClient
-class DummyApiClient implements ApiClient {
-  @override
-  Future<Map<String, dynamic>> get(String endpoint) async {
-    return <String, dynamic>{'status': 'success'};
-  }
+  /// Perform HTTP POST request
+  Future<dynamic> post(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
+  });
 
-  @override
-  Future<Map<String, dynamic>> post(
-    String endpoint, {
-    Map<String, dynamic>? body,
-  }) async {
-    return <String, dynamic>{'status': 'success'};
-  }
+  /// Perform HTTP PUT request
+  Future<dynamic> put(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
+  });
+
+  /// Perform HTTP DELETE request
+  Future<dynamic> delete(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
+  });
 }

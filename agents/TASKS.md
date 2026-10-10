@@ -1,189 +1,137 @@
-# مهام Cutra
+# خطة مهام Cutra
 
-إجمالي المهام: 34 مهمة.
+## نظرة عامة
 
-## Phase 0: Agent Setup
+تطبيق Flutter لإدارة قص السجاد. تنفذ المراحل حسب تجربة المستخدم: theme أولًا، ثم صفحة مكتملة بواجهتها ومنطقها المحلي قبل الانتقال إلى الصفحة التالية. ربط التطبيق بخادم backend يأتي بعد اكتمال جميع المسارات محليًا.
 
-### CUTRA-001: إنشاء `agents/`
-Status: Done
-Goal: إنشاء مركز تحكم متوسط الحجم من 10 ملفات.
-Verification: عد الملفات.
+## الحالة الحالية
 
-### CUTRA-002: تثبيت قواعد SOLID والمكتبات
-Status: Done
-Goal: توثيق SOLID وقاعدة البحث قبل dependency أو custom code.
-Verification: مراجعة `RULES.md`.
+- المشروع يحتوي أساس Flutter وGoRouter وRiverpod وDio وطبقة تخزين.
+- توجد شاشات Auth أولية وHome أولية، ومنطق Automatic/Manual Cutting واختبارات له. وجود الكود لا يعني اكتمال الصفحة وفق معايير هذه الخطة.
+- لم يصل theme المرجعي أو ملفات HTML/CSS الجديدة بعد. يبدأ التنفيذ البصري عند وصولها من مالك المشروع.
+- عقود Auth الحالية وعميل Dio أساس قابل للمراجعة في مرحلة backend؛ لا يفترض أن الخادم النهائي يطابقها.
+- سجلات المهام السابقة موثقة في Git و`DECISIONS.md`. القائمة أدناه هي ترتيب العمل المعتمد من الآن.
 
-### CUTRA-003: تثبيت workflow وsync matrix
-Status: Done
-Goal: ربط العمل بالاختبارات والتكامل.
-Verification: مراجعة `WORKFLOW.md` و`SYNC_MATRIX.md`.
+## قاعدة التسليم لكل صفحة
 
-## Phase 1: Repository Orientation and Tooling
+تُنجز صفحة واحدة قبل التالية بهذا الترتيب: استلام theme وتصميم HTML/CSS الخاص بها، تحليل الحالات والتفاعل، تحويل التصميم إلى Flutter، بناء ViewModel وbusiness logic وربط مصدر بيانات محلي عبر Repository، إضافة التنقل والحالات loading/empty/error والاختبارات المناسبة، ثم مراجعة بصرية وتشغيل `flutter analyze` والاختبارات المستهدفة. لا يوقف غياب backend اكتمال السلوك المحلي؛ توثق نقاط التكامل المؤجلة بوضوح. لا توضع طلبات HTTP في Widget أو ViewModel.
 
-### CUTRA-101: فحص هيكل المشروع
-Status: Todo
-Goal: معرفة الملفات الحالية وحالة Flutter.
-Verification: تقرير مختصر.
+---
 
-### CUTRA-102: تحديد أوامر التشغيل
-Status: Todo
-Goal: معرفة run/analyze/test/build.
-Verification: أوامر موثقة.
+## مراحل التطوير
 
-### CUTRA-103: تنظيف starter/demo code
-Status: Todo
-Goal: إزالة Counter demo أو الملفات غير اللازمة بعد الفحص.
-Verification: app still analyzes/runs.
+### المرحلة 0 — Theme ونظام التصميم
 
-### CUTRA-104: مراجعة dependencies الحالية
-Status: Todo
-Goal: معرفة الموجود في `pubspec.yaml`.
-Verification: قائمة dependencies وملاحظات.
+> الهدف: تطبيق theme الذي سيرسله المالك قبل بناء أي صفحة جديدة.
 
-## Phase 2: Core Foundation
+- [ ] **CUTRA-UI-001 — استلام theme وتحليله**
+  - [ ] توثيق الألوان والخطوط والمسافات والأيقونات والأصول، وحالات light/dark وRTL إن وردت.
+  - [ ] تحديد المكونات المشتركة وقواعد الاستجابة للشاشات المختلفة.
+- [ ] **CUTRA-UI-002 — تنفيذ theme في Flutter**
+  - [ ] بناء `ThemeData` و`TextTheme` وtokens والمكونات المشتركة حسب المرجع.
+  - [ ] ربط theme بجذر التطبيق والتحقق من الشاشات القائمة دون تغيير وظائفها.
+  - [ ] التحقق بصريًا من المقاسات والحالات الأساسية، وتشغيل التحليل والاختبارات المتأثرة.
 
-### CUTRA-201: بحث واعتماد dependencies الأساسية
-Status: Todo
-Goal: مراجعة Riverpod/Dio/GoRouter/storage/freezed/json.
-Verification: موافقة مالك المشروع.
+### المرحلة 1 — Splash Page
 
-### CUTRA-202: إعداد core structure
-Status: Todo
-Goal: إنشاء `core/config`, `errors`, `network`, `storage`, `widgets`.
-Verification: analyze.
+> الهدف: مسار بدء تشغيل كامل يمكن اختباره محليًا.
 
-### CUTRA-203: إعداد Dio API client
-Status: Todo
-Goal: API client مركزي.
-Verification: unit test أو review.
+- [ ] **CUTRA-UI-101 — Splash UI/UX وbusiness logic**
+  - [ ] استلام HTML/CSS والأصول وتحويلها إلى Flutter باستخدام theme المعتمد.
+  - [ ] تنفيذ التهيئة واستعادة حالة الجلسة المحلية عبر ViewModel وRepository.
+  - [ ] توجيه المستخدم بحسب الحالة المحلية، مع حالات التحميل والفشل وإعادة المحاولة.
+  - [ ] اختبار الانتقالات والتوقيت/التهيئة ومراجعة الواجهة على المقاسات المستهدفة.
 
-### CUTRA-204: إعداد storage wrappers
-Status: Todo
-Goal: Secure Storage وSharedPreferences خلف wrappers.
-Verification: unit tests.
+### المرحلة 2 — Home Page
 
-### CUTRA-205: إعداد shared errors/states
-Status: Todo
-Goal: توحيد loading/error/failure.
-Verification: tests/review.
+> الهدف: شاشة رئيسية مكتملة بالبيانات والسلوك المحلي قبل بدء صفحة أخرى.
 
-## Phase 3: Routing and State Pattern
+- [ ] **CUTRA-UI-201 — Home UI/UX وbusiness logic**
+  - [ ] استلام HTML/CSS وتحويل التخطيط والمكونات إلى Flutter.
+  - [ ] عرض حالة المستخدم والإجراءات الرئيسية والتنقل الفعلي إلى المسارات المتاحة.
+  - [ ] توفير ViewModel ومصدر بيانات محلي واضح، مع loading/empty/error عند الحاجة.
+  - [ ] اختبار السلوك والتنقل ومراجعة الشكل على المقاسات المستهدفة.
 
-### CUTRA-301: إعداد GoRouter
-Status: Todo
-Goal: routes أساسية وguards.
-Verification: route tests.
+### المرحلة 3 — صفحات الحساب
 
-### CUTRA-302: تثبيت Riverpod pattern
-Status: Todo
-Goal: provider/repository/controller pattern.
-Verification: review.
+> الهدف: إكمال تدفق المصادقة محليًا؛ تبقى مطابقة API وربطه للمرحلة الأخيرة.
 
-### CUTRA-303: مراجعة Dependency Inversion
-Status: Todo
-Goal: منع UI من معرفة Dio/Storage.
-Verification: architecture review.
+- [ ] **CUTRA-UI-301 — Login**
+  - [ ] تحويل HTML/CSS، والتحقق من المدخلات، وإظهار التقدم والأخطاء.
+  - [ ] تنفيذ تسجيل دخول محلي قابل للاختبار وتحديث حالة الجلسة والتوجيه.
+- [ ] **CUTRA-UI-302 — Register**
+  - [ ] تحويل HTML/CSS، والتحقق من الحقول، وتنفيذ إنشاء حساب محلي وحالات النتيجة.
+- [ ] **CUTRA-UI-303 — Pending وRejected**
+  - [ ] تنفيذ كلتا الحالتين بصريًا ووظيفيًا مع الإجراءات المتاحة والتنقل المناسب.
+- [ ] **CUTRA-UI-304 — إغلاق تدفق الحساب**
+  - [ ] اختبار Splash/Login/Register/Pending/Rejected كمسار واحد، بما فيه تسجيل الخروج واستعادة الجلسة.
+  - [ ] توثيق الفروق بين العقود الحالية والسلوك المحلي لتراجع عند تكامل backend.
 
-### CUTRA-304: إعداد app shell
-Status: Todo
-Goal: ProviderScope + router + theme.
-Verification: app launches/analyze.
+### المرحلة 4 — Automatic Cutting وResult
 
-## Phase 4: Auth Vertical Slice
+> الهدف: إدخال القياسات، حساب القص، وعرض النتيجة كاملة دون خادم.
 
-### CUTRA-401: توثيق Auth API contracts
-Status: Todo
-Goal: login/register/session/pending/rejected.
-Verification: owner review.
+- [ ] **CUTRA-UI-401 — Automatic Cutting**
+  - [ ] تحويل HTML/CSS وربط النموذج والتحقق بخوارزمية Cutting الحالية عبر ViewModel.
+  - [ ] معالجة الأبعاد والوحدات والقيود والأخطاء وتعديل المدخلات وإعادة الحساب.
+- [ ] **CUTRA-UI-402 — Result**
+  - [ ] تحويل HTML/CSS وعرض مخطط القص والقياسات والهدر والتنبيهات.
+  - [ ] دعم الرجوع والتعديل والحفظ المحلي للنتيجة عند اكتمال مسار الحفظ.
+  - [ ] اختبار صحة النتائج وحالات الحواف ومراجعة العرض والتفاعل.
 
-### CUTRA-402: بناء Auth models
-Status: Todo
-Goal: Freezed/json models.
-Verification: generation + tests.
+### المرحلة 5 — Manual Cutting
 
-### CUTRA-403: بناء Auth data/repository
-Status: Todo
-Goal: فصل API عن UI.
-Verification: unit tests.
+> الهدف: مسار قص يدوي مكتمل يستخدم المنطق الموجود ويصل إلى Result.
 
-### CUTRA-404: بناء Auth controller/storage
-Status: Todo
-Goal: session restore/logout/states.
-Verification: controller tests.
+- [ ] **CUTRA-UI-501 — Manual Cutting UI/UX وbusiness logic**
+  - [ ] تحويل HTML/CSS وتنفيذ إضافة القطع وتحريكها/تعديلها وفق قيود المحرك الحالي.
+  - [ ] دعم التراجع أو إعادة الضبط حيث يقتضي التصميم، وإظهار أخطاء القيود فورًا.
+  - [ ] تمرير النتيجة إلى Result، واختبار التفاعلات وحالات الحواف.
 
-### CUTRA-405: بناء Auth screens
-Status: Todo
-Goal: splash/login/register/pending/rejected.
-Verification: widget tests.
+### المرحلة 6 — History
 
-## Phase 5: Home and Cutting
+- [ ] **CUTRA-UI-601 — History UI/UX وbusiness logic**
+  - [ ] تحويل HTML/CSS مع قائمة النتائج وحالة الفراغ والبحث/الفرز إن وردا في التصميم.
+  - [ ] حفظ النتائج محليًا وفتحها وحذفها بأمان عبر Repository وViewModel.
+  - [ ] اختبار serialization ودورة الحفظ والفتح والحذف.
 
-### CUTRA-501: بناء Home
-Status: Todo
-Goal: landing screen للمستخدم المقبول.
-Verification: widget test.
+### المرحلة 7 — Profile
 
-### CUTRA-502: جمع متطلبات cutting
-Status: Todo
-Goal: الأبعاد، القيود، وحدات القياس.
-Verification: owner review.
+- [ ] **CUTRA-UI-701 — Profile UI/UX وbusiness logic**
+  - [ ] تحويل HTML/CSS وعرض/تعديل البيانات والتفضيلات المحلية وفق التصميم.
+  - [ ] تنفيذ تسجيل الخروج ومسح بيانات الجلسة والتوجيه الصحيح.
+  - [ ] اختبار الحالة المحلية والتأثير على Splash وHome.
 
-### CUTRA-503: بحث مكتبات cutting/geometry
-Status: Todo
-Goal: اقتراح مكتبة أو توثيق custom.
-Verification: موافقة.
+### المرحلة 8 — Support
 
-### CUTRA-504: بناء cutting models/validation
-Status: Todo
-Goal: material/pieces/constraints.
-Verification: unit tests.
+- [ ] **CUTRA-UI-801 — Support UI/UX وbusiness logic**
+  - [ ] تحويل HTML/CSS وعرض قنوات الدعم والأسئلة أو نموذج الطلب إن ورد.
+  - [ ] تنفيذ التحقق والتفاعل محليًا؛ توثيق أي إرسال خارجي للمرحلة الأخيرة.
+  - [ ] اختبار الإجراءات وحالات النجاح والفشل المحلية.
 
-### CUTRA-505: بناء automatic cutting logic
-Status: Todo
-Goal: منطق قابل للاختبار خارج UI.
-Verification: unit tests.
+### المرحلة 9 — تكامل Backend
 
-### CUTRA-506: بناء manual cutting أساسًا
-Status: Todo
-Goal: model + interactions الأساسية.
-Verification: widget/unit tests.
+> تبدأ بعد إغلاق المراحل البصرية والمنطقية السابقة، وتربط البيانات الحقيقية دون إعادة تصميم الصفحات.
 
-## Phase 6: Results, History, Profile, Support
+- [ ] **CUTRA-BE-901 — مراجعة العقد والخادم**
+  - [ ] تثبيت base URL والمصادقة ونماذج الطلب/الرد والأخطاء مع مالك المشروع.
+  - [ ] مقارنة `AUTH_API_CONTRACTS.md` والخدمات الموجودة بالعقد الفعلي وتحديثها.
+- [ ] **CUTRA-BE-902 — ربط المسارات**
+  - [ ] تنفيذ Remote Data Sources خلف عقود Repository الحالية للحساب والبيانات المطلوبة.
+  - [ ] معالجة tokens والتحديث وفقد الاتصال وحالات الخادم مع الحفاظ على حالة UI.
+  - [ ] إبقاء التخزين المحلي حيث يلزم والتوفيق بين المحلي والبعيد بقرار موثق.
+- [ ] **CUTRA-BE-903 — اختبارات التكامل**
+  - [ ] اختبار تبديل Local/Remote repositories ومسارات النجاح والفشل.
+  - [ ] اختبار التطبيق مع بيئة backend المتاحة دون ترك بيانات تجريبية في الإنتاج.
 
-### CUTRA-601: بناء Result screen
-Status: Todo
-Goal: عرض نتائج التقطيع.
-Verification: widget test.
+### المرحلة 10 — الجودة والإطلاق
 
-### CUTRA-602: بناء History
-Status: Todo
-Goal: حفظ وفتح النتائج السابقة.
-Verification: storage/serialization tests.
+- [ ] **CUTRA-QA-1001 — فحص شامل**: تنقل ومسارات المستخدم، responsive، accessibility، RTL عند الحاجة، format/analyze/tests/build.
+- [ ] **CUTRA-QA-1002 — مراجعة الأمان**: التخزين الحساس، الجلسات، المدخلات، وأخطاء الشبكة.
+- [ ] **CUTRA-QA-1003 — إعداد الإصدار**: الاسم والأيقونة وnative splash والتوقيع وقائمة الإطلاق.
 
-### CUTRA-603: بناء Profile
-Status: Todo
-Goal: عرض بيانات الحساب وlogout.
-Verification: widget test.
+---
 
-### CUTRA-604: بناء Support
-Status: Todo
-Goal: شاشة مساعدة/تواصل.
-Verification: widget test.
+## معيار الانتقال
 
-## Phase 7: Quality and Release
-
-### CUTRA-701: full quality pass
-Status: Todo
-Goal: format/analyze/test.
-Verification: commands pass أو blockers موثقة.
-
-### CUTRA-702: security review
-Status: Todo
-Goal: مراجعة tokens/storage/API.
-Verification: checklist.
-
-### CUTRA-703: release preparation
-Status: Todo
-Goal: app id/name/icon/splash/signing.
-Verification: release checklist.
+لا تبدأ المرحلة التالية حتى تعمل الصفحة الحالية بواجهتها ومنطقها المحلي، وتجتاز التحقق المناسب، وتُحدّث حالتها هنا. الاعتماد على backend مؤجل فقط؛ لا تؤجل تفاعلًا أو تحققًا يمكن إنجازه محليًا. أي نقص في HTML/CSS أو قرار منتج يسجل في `DECISIONS.md` دون اعتبار الصفحة مكتملة.

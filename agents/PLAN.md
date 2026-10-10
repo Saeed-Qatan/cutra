@@ -2,51 +2,34 @@
 
 ## الهدف
 
-بناء تطبيق Flutter متوسط الحجم بطريقة تدريجية: أساس معماري واضح، ثم Auth، ثم Home، ثم Cutting، ثم History/Profile/Support، ثم الجودة والإطلاق.
+تطوير Cutra شاشة بعد شاشة. يصل theme من مالك المشروع أولًا، ثم يصل HTML/CSS لكل صفحة. يحول التصميم إلى Flutter وتنجز UI/UX وbusiness logic محليًا باستخدام MVVM وRiverpod قبل بدء الصفحة التالية. تكامل backend يأتي بعد اكتمال المسارات المحلية.
 
-## المراحل
+## الترتيب المعتمد
 
-### Phase 0: Agent Setup
+1. تطبيق theme ونظام التصميم.
+2. Splash، ثم Home.
+3. صفحات الحساب: Login وRegister وPending وRejected.
+4. Automatic Cutting وResult، ثم Manual Cutting.
+5. History، ثم Profile، ثم Support.
+6. مراجعة عقود API وربط backend.
+7. الجودة النهائية والإطلاق.
 
-تجهيز ملفات التحكم والتخطيط.
+التفصيل وحالة كل مرحلة في `TASKS.md`. الترتيب لا يجعل الشاشات الموجودة مسبقًا مكتملة تلقائيًا؛ تُراجع مقابل تصميم المالك ومعيار الإغلاق الجديد.
 
-### Phase 1: Repository Orientation and Tooling
+## تعريف الإنجاز
 
-فحص المشروع الحالي، تنظيف starter/demo code، وتحديد أوامر run/analyze/test.
+كل صفحة تشمل: تصميم Flutter مطابقًا للمرجع، تفاعلًا وتنقلًا، حالات loading/empty/error الملائمة، ViewModel في Riverpod، منطقًا مستقلًا عن Widgets، Repository محليًا عند الحاجة، واختبارات مناسبة. توثّق عقود البيانات التي ستستبدل بمصدر remote لاحقًا. لا يبدأ تنفيذ صفحة تالية لمجرد اكتمال مظهر الصفحة الحالية.
 
-### Phase 2: Core Foundation
+## تدفق MVVM
 
-بناء الأساس المشترك: network، storage، errors، theme، shared widgets.
+`View -> ViewModel (Riverpod) -> use case/service عند الحاجة -> Repository contract -> Local Data Source`.
 
-### Phase 3: Routing and State Pattern
+تعرض View الحالة وترسل أفعال المستخدم. يدير ViewModel الحالة وينسق المنطق. يملك Repository مصدر البيانات. عند مرحلة backend تضاف Remote Data Sources خلف العقود نفسها، فلا يتغير تصميم الشاشات بسبب مصدر البيانات.
 
-إعداد GoRouter ونمط Riverpod: providers، repositories، controllers، state.
+## مدخلات التصميم
 
-### Phase 4: Auth Vertical Slice
+الـtheme هو المرجع الأول. يرسل المالك HTML/CSS والأصول لكل صفحة تباعًا. يحدد `Stitch.md` طريقة تحويلها، و`Feature.md` طريقة إغلاق كل ميزة. عند نقص مدخل ضروري توثق الفجوة في `DECISIONS.md`.
 
-بناء Splash/Login/Register/Pending/Rejected/Home redirect مع session storage.
+## الحالة الحالية
 
-### Phase 5: Home and Cutting
-
-بناء Home، ثم Automatic Cutting، ثم Manual Cutting بعد تثبيت منطق التقطيع.
-
-### Phase 6: Results, History, Profile, Support
-
-بناء عرض النتائج، السجل، الملف الشخصي، والدعم.
-
-### Phase 7: Quality and Release
-
-تشغيل الاختبارات، مراجعة الأمن، إعداد build/release.
-
-## خارج النطاق الآن
-
-- لا يتم بناء Flutter Features في خطوة إعداد Agents.
-- لا يتم إضافة dependencies بدون موافقة.
-- لا يتم تنفيذ cutting algorithm قبل تحديد المتطلبات وبحث المكتبات.
-
-## معيار النجاح
-
-- وجود `agents/` يحتوي 10 ملفات فقط.
-- وجود خطة ومهام وقواعد واضحة.
-- وجود workflow للبحث عن المكتبات والتزامن والاختبارات.
-- عدم تعديل كود التطبيق أثناء إعداد التخطيط.
+يوجد أساس Flutter وشاشات Auth وHome أولية ومنطق Cutting قابل لإعادة الاستخدام. توجد طبقة API مبدئية، لكنها لا تعني بدء تكامل backend النهائي. يعتمد التقدم القادم على مراجعة هذه الأجزاء مقابل theme والتصاميم الجديدة.

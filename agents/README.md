@@ -1,37 +1,21 @@
 # مركز وكلاء Cutra
 
-هذا المجلد هو مركز تشغيل وتخطيط مشروع Cutra. النسخة الحالية مناسبة لمشروع متوسط، لذلك تحتوي على 10 ملفات فقط بدل هيكلة كبيرة.
+يحتوي هذا المجلد خطة تنفيذ التطبيق وتعليمات العمل المشتركة. `TASKS.md` هو مصدر ترتيب المهام وحالتها.
 
-## الهدف
+## اتجاه العمل
 
-- توحيد طريقة عمل Codex وAntigravity.
-- تثبيت المعمارية قبل كتابة كود التطبيق.
-- حفظ القواعد والقرارات والمهام في مكان واحد.
-- منع إضافة مكتبات أو بناء حلول مخصصة بدون بحث وموافقة.
+يرسل مالك المشروع theme أولًا، ثم HTML/CSS لكل صفحة. يطبق theme قبل الصفحات. تنفذ كل صفحة Flutter UI/UX مع business logic محلي وفق MVVM وRiverpod، وتختبر قبل بدء الصفحة التالية. يبدأ التسلسل بـSplash ثم Home. يأتي تكامل backend بعد اكتمال الصفحات والمنطق المحلي.
 
 ## ترتيب القراءة
 
-1. `AGENTS.md`
-2. `PLAN.md`
-3. `RULES.md`
-4. `ARCHITECTURE.md`
-5. `WORKFLOW.md`
-6. `TASKS.md`
-7. `SYNC_MATRIX.md`
-8. `DECISIONS.md`
+1. `AGENTS.md` و`PLAN.md`.
+2. `TASKS.md` لتحديد المرحلة والصفحة الحالية.
+3. `ARCHITECTURE.md` و`RULES.md` لتدفق MVVM.
+4. `Stitch.md` عند وصول theme أو HTML/CSS.
+5. `WORKFLOW.md` و`Feature.md` و`SYNC_MATRIX.md` أثناء التنفيذ.
+6. `GIT_BRANCH_WORKFLOW.md` عند إنشاء فرع أو Pull Request.
+7. `DECISIONS.md` للقرارات والأسئلة، و`ROLES.md` للمسؤوليات.
 
-## اتجاه Cutra التقني
+## التقنية القائمة
 
-- Flutter
-- Riverpod
-- Dio
-- GoRouter
-- Flutter Secure Storage
-- SharedPreferences
-- Freezed وjson_serializable
-- Feature-first architecture
-- SOLID
-
-## قاعدة مهمة
-
-لا يتم تنفيذ Features قبل مراجعة هذه الملفات واعتمادها. ولا يتم استخدام أي dependency جديدة قبل البحث عنها، اقتراحها، والموافقة عليها.
+Flutter وRiverpod وGoRouter وDio وSecure Storage وSharedPreferences وFreezed/json_serializable. وجود عميل Dio لا يعني اكتمال تكامل backend. تفاصيل الحالة الفعلية والمهام القادمة في `TASKS.md`.
