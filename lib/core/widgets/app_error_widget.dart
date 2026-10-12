@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 /// Reusable central error widget with optional retry action.
 class AppErrorWidget extends StatelessWidget {
@@ -33,14 +34,14 @@ class AppErrorWidget extends StatelessWidget {
               size: 48,
               color: Theme.of(context).colorScheme.error,
             ),
-            const SizedBox(height: 16),
+            const Gap(16),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
             if (retryAction != null) ...<Widget>[
-              const SizedBox(height: 20),
+              const Gap(20),
               ElevatedButton.icon(
                 onPressed: retryAction,
                 icon: const Icon(Icons.refresh),

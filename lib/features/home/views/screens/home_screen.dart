@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/services/storage_service.dart';
-import '../../data/repositories/counter_repository.dart';
-import '../../viewmodels/counter_viewmodel.dart';
+import '../../data/local_home_repository.dart';
+import '../../view_models/home_view_model.dart';
 import '../widgets/counter_display_widget.dart';
 
 /// Top-level screen for Home Feature
@@ -14,15 +14,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late final CounterViewModel _viewModel;
+  late final HomeViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
     // Inject dependencies into ViewModel
     final storageService = InMemoryStorageService();
-    final repository = CounterRepositoryImpl(storageService);
-    _viewModel = CounterViewModel(repository);
+    final repository = LocalHomeRepository(storageService);
+    _viewModel = HomeViewModel(repository);
   }
 
   @override

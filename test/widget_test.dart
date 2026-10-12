@@ -13,6 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cutra/app/router/auth_status.dart';
 import 'package:cutra/core/providers/core_providers.dart';
 import 'package:cutra/main.dart';
+import 'package:cutra/features/auth/view_models/splash_view_model.dart';
+
+class _FinishedSplash extends SplashViewModel {
+  _FinishedSplash() {
+    state = true;
+  }
+}
 
 void main() {
   setUp(() {
@@ -25,18 +32,18 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         sharedPreferencesInstanceProvider.overrideWithValue(prefs),
+        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
       ],
     );
     addTearDown(container.dispose);
 
     // Set authenticated so GoRouter routes to HomeScreen
-    container.read(authStatusProvider.notifier).setStatus(AuthStatus.authenticated);
+    container
+        .read(authStatusProvider.notifier)
+        .setStatus(AuthStatus.authenticated);
 
     await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: const MyApp(),
-      ),
+      UncontrolledProviderScope(container: container, child: const MyApp()),
     );
     await tester.pumpAndSettle();
 

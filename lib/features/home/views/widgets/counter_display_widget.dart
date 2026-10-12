@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/extensions.dart';
 
@@ -17,7 +18,7 @@ class CounterDisplayWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const Text(AppStrings.counterDescription),
-        const SizedBox(height: 8),
+        const Gap(8),
         Text(
           '$count',
           style: context.textTheme.headlineMedium,

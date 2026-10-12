@@ -9,6 +9,7 @@ lib/
   app/
     router/
   core/
+    constants/
     theme/
     errors/
     network/
@@ -16,20 +17,24 @@ lib/
     widgets/
   features/
     <feature>/
-      presentation/
+      models/
+      data/
+        repositories/ # عند الحاجة؛ موجود في Auth وHome
+      view_models/
+      views/
         screens/
         widgets/
-        viewmodels/
-      domain/
-        models/
-        services/
-        repositories/
-      data/
-        datasources/
-        repositories/
 ```
 
-المجلدات الحالية قد تستخدم `controllers/` بدل `viewmodels/`. تُعامل Controllers القائمة كـViewModels إذا كانت تدير حالة العرض عبر Riverpod؛ تُعدّل تدريجيًا عند العمل على ميزتها، دون إعادة تسمية شاملة.
+هذه الهيكلة تخص الميزة فقط؛ لا تنشئ مجلدًا أو ملفًا بلا حاجة. ضع النماذج في `models/`، وعقود البيانات وتنفيذها في `data/`، والحالة وProviders في `view_models/`، والعرض في `views/`. لا تنشئ `presentation/` أو `domain/` افتراضيًا للميزات الجديدة. يمكن إبقاء خوارزمية أو خدمة pure Dart منفصلة عندما تقتضي طبيعة الميزة ذلك.
+
+## خريطة الكود الحالي
+
+- Auth: `lib/features/auth/models/auth_models.dart`، و`data/` لمصادر البيانات وعقود Repository، و`view_models/auth_view_model.dart`، و`view_models/splash_view_model.dart`، و`views/` للشاشات ومكونات كل صفحة.
+- Home: `models/home_model.dart` و`data/repositories/` و`view_models/home_view_model.dart` و`views/`. التطبيق الحالي عداد مبدئي.
+- Cutting: `models/cutting_models.dart` و`view_models/`؛ تحتفظ الخوارزميات بمسار `domain/algorithms/` الحالي، ولا توجد واجهات نهائية بعد.
+- ملفات Auth/Home المباشرة في `data/` قد تكون exports إلى `data/repositories/`. وملفات Cutting القديمة في `presentation/controllers/` و`data/models/` ملفات توافق. افحص محتواها قبل التعديل ولا تنشئ تطبيقًا ثانيًا للمنطق.
+- التوجيه الفعلي من `lib/app/router/app_router.dart`. يوجد موجّه قديم في `lib/core/routes/app_router.dart` لا يستخدمه جذر التطبيق؛ لا تربط التنقل الجديد به.
 
 ## تدفق MVVM مع Riverpod
 
@@ -48,9 +53,19 @@ User action -> View -> Riverpod ViewModel -> domain logic -> Repository -> Local
 
 ## Theme وRouting
 
-- يطبق theme المرسل من المالك قبل تحويل الصفحات، وتستخدم الصفحات tokens والمكونات المشتركة.
-- GoRouter يربط الصفحات المكتملة. يبدأ التدفق بـSplash ثم Home وفق حالة الجلسة المحلية؛ تضبط حالات الحساب عند إنجازها.
+- لوحة الألوان في `lib/core/constants/colors.dart`، والنص والأحجام والمكونات المشتركة في `lib/core/theme/app_theme.dart`.
+- يحدد `light_theme.dart` و`dark_theme.dart` ألوان كل وضع، ويربطهما `main.dart` حسب وضع الجهاز.
+- تستمد تفاصيل كل صفحة من HTML/CSS الخاص بها عند وصوله، وتستخدم النظام المشترك بدل القيم المتفرقة.
+- `main.dart` يهيئ SharedPreferences وProviderScope ويربط theme وGoRouter فقط؛ لا تضف مؤقتات أو تفاصيل شاشات إليه.
+- `SplashViewModel` يدير مؤقت خمس ثوانٍ يبدأ بعد أول إطار للصفحة. يهيئ `AuthViewModel` الجلسة بالتوازي، ويمنع GoRouter تجاوز Splash قبل انتهاء المؤقت. بعده تكون الوجهة Login أو Pending أو Rejected أو Home بحسب الحالة، وتبقى Splash عند استمرار التحقق.
 - تُختبر كل صفحة في وضعها المحلي قبل الانتقال إلى التالية.
+
+## الشعار وموارد المنصات
+
+- مصدر الشعار `assets/icons/cutra_icon.svg`؛ C أبيض وخلفية `#111111` وقطع `#00439B`. تعرضه View عبر `AppAssets.appIcon` و`flutter_svg` دون شبكة.
+- `tool/generate_splash_assets_test.dart` يولد صور PNG للـNative Splash وأيقونة الهاتف من SVG.
+- إعدادات `flutter_native_splash` و`flutter_launcher_icons` في `pubspec.yaml`. يولد الأخير موارد `cutra_launcher` ويشير AndroidManifest إليها.
+- Native Splash تظهر أثناء تهيئة Flutter فقط. صفحة Flutter الكاملة مستقلة عنها وتملك مؤقت الخمس ثوانٍ. لا تعِد إضافة `animated_splash_screen` ولا تسمح بتنقل تلقائي موازٍ لـGoRouter.
 
 ## Backend لاحقًا
 

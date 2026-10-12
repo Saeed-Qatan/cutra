@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/providers/core_providers.dart';
-import '../../features/auth/presentation/screens/login_screen.dart';
-import '../../features/auth/presentation/screens/pending_screen.dart';
-import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/auth/presentation/screens/rejected_screen.dart';
-import '../../features/auth/presentation/screens/splash_screen.dart';
+import '../../features/auth/views/screens/login_screen.dart';
+import '../../features/auth/views/screens/pending_screen.dart';
+import '../../features/auth/views/screens/register_screen.dart';
+import '../../features/auth/views/screens/rejected_screen.dart';
+import '../../features/auth/views/screens/splash_screen.dart';
+import '../../features/auth/view_models/splash_view_model.dart';
 import '../../features/home/views/screens/home_screen.dart';
 import 'app_routes.dart';
 import 'auth_status.dart';
@@ -14,6 +15,7 @@ import 'auth_status.dart';
 /// Provider for GoRouter configuration with Auth Guard
 final goRouterProvider = Provider<GoRouter>((ref) {
   final authStatus = ref.watch(authStatusProvider);
+  final splashFinished = ref.watch(splashViewModelProvider);
 
   return GoRouter(
     initialLocation: AppRoutes.splash,
@@ -51,6 +53,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     ],
     redirect: (BuildContext context, GoRouterState state) {
       final loc = state.matchedLocation;
+
+      if (!splashFinished) {
+        return loc == AppRoutes.splash ? null : AppRoutes.splash;
+      }
 
       switch (authStatus) {
         case AuthStatus.checking:

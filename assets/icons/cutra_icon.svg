@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Cutra</title>
+  <desc>A precision-cut C with fitted carpet tiles.</desc>
+  <rect width="512" height="512" rx="104" fill="#111111"/>
+  <path d="M352 128H192C156.65 128 128 156.65 128 192V320C128 355.35 156.65 384 192 384H352V320H208C199.16 320 192 312.84 192 304V208C192 199.16 199.16 192 208 192H352Z" fill="#FFFFFF"/>
+  <path d="M256 224H304V288H256Z" fill="#00439B"/>
+  <path d="M320 224H384V256H320Z" fill="#00439B"/>
+  <path d="M320 272H384V288H320Z" fill="#00439B"/>
+</svg>

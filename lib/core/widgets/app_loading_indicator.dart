@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 /// Reusable central loading indicator widget.
 class AppLoadingIndicator extends StatelessWidget {
@@ -17,7 +18,7 @@ class AppLoadingIndicator extends StatelessWidget {
         children: <Widget>[
           const CircularProgressIndicator(),
           if (text != null) ...<Widget>[
-            const SizedBox(height: 16),
+            const Gap(16),
             Text(
               text,
               style: Theme.of(context).textTheme.bodyMedium,

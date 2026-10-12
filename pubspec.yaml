@@ -45,9 +45,8 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   awesome_dialog: ^3.3.0
   flutter_animate: ^4.5.2
-  freezed_annotation: ^2.4.4
-  json_annotation: ^4.9.0
   intl: ^0.20.2
+  flutter_svg: ^2.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,10 +57,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  build_runner: ^2.4.15
-  freezed: ^2.5.8
-  json_serializable: ^6.9.4
   mocktail: ^1.0.5
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +70,29 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/icons/cutra_icon.svg
+
+  fonts:
+    - family: IBMPlexSans
+      fonts:
+        - asset: assets/fonts/IBMPlexSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSans-Bold.ttf
+          weight: 700
+    - family: IBMPlexSansArabic
+      fonts:
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
+          weight: 700
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Variable.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -104,3 +124,23 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/icons/cutra_splash.png
+  android_gravity: center
+  ios_content_mode: center
+  web: false
+  android_12:
+    color: "#ffffff"
+    image: assets/icons/cutra_splash_android12.png
+
+flutter_launcher_icons:
+  android: "cutra_launcher"
+  ios: true
+  image_path: assets/icons/cutra_launcher.png
+  adaptive_icon_background: "#111111"
+  adaptive_icon_foreground: assets/icons/cutra_launcher.png
+  adaptive_icon_foreground_inset: 16
+  remove_alpha_ios: true
+  background_color_ios: "#111111"

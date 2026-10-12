@@ -5,6 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cutra/app/router/auth_status.dart';
 import 'package:cutra/core/providers/core_providers.dart';
 import 'package:cutra/main.dart';
+import 'package:cutra/features/auth/view_models/splash_view_model.dart';
+
+class _FinishedSplash extends SplashViewModel {
+  _FinishedSplash() {
+    state = true;
+  }
+}
 
 void main() {
   setUp(() {
@@ -17,7 +24,10 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     final container = ProviderContainer(
-      overrides: [sharedPreferencesInstanceProvider.overrideWithValue(prefs)],
+      overrides: [
+        sharedPreferencesInstanceProvider.overrideWithValue(prefs),
+        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
+      ],
     );
     addTearDown(container.dispose);
 
@@ -39,7 +49,10 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     final container = ProviderContainer(
-      overrides: [sharedPreferencesInstanceProvider.overrideWithValue(prefs)],
+      overrides: [
+        sharedPreferencesInstanceProvider.overrideWithValue(prefs),
+        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
+      ],
     );
     addTearDown(container.dispose);
 
@@ -59,7 +72,10 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     final container = ProviderContainer(
-      overrides: [sharedPreferencesInstanceProvider.overrideWithValue(prefs)],
+      overrides: [
+        sharedPreferencesInstanceProvider.overrideWithValue(prefs),
+        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
+      ],
     );
     addTearDown(container.dispose);
 

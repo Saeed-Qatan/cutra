@@ -2,12 +2,12 @@ import 'package:cutra/app/router/auth_status.dart';
 import 'package:cutra/core/network/api_client.dart';
 import 'package:cutra/core/providers/core_providers.dart';
 import 'package:cutra/core/storage/storage_service.dart';
-import 'package:cutra/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:cutra/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:cutra/features/auth/data/models/auth_models.dart';
-import 'package:cutra/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:cutra/features/auth/domain/repositories/auth_repository.dart';
-import 'package:cutra/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:cutra/features/auth/data/auth_local_data_source.dart';
+import 'package:cutra/features/auth/data/auth_remote_data_source.dart';
+import 'package:cutra/features/auth/data/auth_repository.dart';
+import 'package:cutra/features/auth/data/local_auth_repository.dart';
+import 'package:cutra/features/auth/models/auth_models.dart';
+import 'package:cutra/features/auth/view_models/auth_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -23,11 +23,11 @@ void main() {
     });
   });
 
-  group('AuthRepositoryImpl', () {
+  group('LocalAuthRepository', () {
     test('login sends request and stores returned session', () async {
       final apiClient = FakeApiClient(response: _sessionJson());
       final storage = FakeStorageService();
-      final repository = AuthRepositoryImpl(
+      final repository = LocalAuthRepository(
         remoteDataSource: ApiAuthRemoteDataSource(apiClient),
         localDataSource: SecureAuthLocalDataSource(storage),
       );
@@ -49,7 +49,7 @@ void main() {
     });
   });
 
-  group('AuthController', () {
+  group('AuthViewModel', () {
     test('restores stored approved session and syncs AuthStatus', () async {
       final repository = FakeAuthRepository(storedSession: _session());
       final container = ProviderContainer(
@@ -57,7 +57,7 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      final state = await container.read(authControllerProvider.future);
+      final state = await container.read(authViewModelProvider.future);
 
       expect(state.status, AuthStatus.authenticated);
       expect(container.read(authStatusProvider), AuthStatus.authenticated);
@@ -72,9 +72,9 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      await container.read(authControllerProvider.future);
+      await container.read(authViewModelProvider.future);
       await container
-          .read(authControllerProvider.notifier)
+          .read(authViewModelProvider.notifier)
           .login(email: 'user@example.com', password: 'secret');
 
       expect(container.read(authStatusProvider), AuthStatus.pending);
@@ -164,14 +164,10 @@ class FakeStorageService implements StorageService {
   final Map<String, String> values = <String, String>{};
 
   @override
-  Future<void> clear() async {
-    values.clear();
-  }
+  Future<void> clear() async => values.clear();
 
   @override
-  Future<void> delete(String key) async {
-    values.remove(key);
-  }
+  Future<void> delete(String key) async => values.remove(key);
 
   @override
   Future<bool?> readBool(String key) async => null;

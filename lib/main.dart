@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app/router/app_router.dart';
 import 'core/constants/app_strings.dart';
 import 'core/providers/core_providers.dart';
-import 'core/theme/app_theme.dart';
+import 'core/theme/dark_theme.dart';
+import 'core/theme/light_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,8 +32,9 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       title: AppStrings.appTitle,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.system,
       routerConfig: router,
     );
   }
