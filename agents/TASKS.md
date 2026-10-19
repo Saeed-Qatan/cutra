@@ -1,144 +1,46 @@
-# خطة مهام Cutra
+# Cutra Development Tasks
 
-## نظرة عامة
+## Active Scope
 
-تطبيق Flutter لإدارة قص السجاد. تنفذ المراحل حسب تجربة المستخدم: theme أولًا، ثم صفحة مكتملة بواجهتها ومنطقها المحلي قبل الانتقال إلى الصفحة التالية. ربط التطبيق بخادم backend يأتي بعد اكتمال جميع المسارات محليًا.
+The application currently exposes only Splash and Login. Build one full feature at a time. The next page starts after the owner supplies its design and behavior. Preliminary API code is not final backend integration.
 
-## الحالة الحالية
+## Theme
 
-- المشروع يحتوي أساس Flutter وGoRouter وRiverpod وDio وطبقة تخزين.
-- توجد شاشات Auth أولية وHome أولية، ومنطق Automatic/Manual Cutting واختبارات له. وجود الكود لا يعني اكتمال الصفحة وفق معايير هذه الخطة.
-- وصل مرجع `DESIGN (1).md` ونُفذ theme بوضعي light/dark. وصل HTML/CSS لـSplash ونُفذ كاملًا مع شعار محلي وعرض خمس ثوانٍ، وNative Splash وأيقونات Android/iOS. Home تنتظر تصميمها النهائي.
-- الهيكلة المعتمدة داخل feature: `models/data/view_models/views`؛ بعض exports والمسارات القديمة باقية للتوافق وفق `ARCHITECTURE.md`.
-- عقود Auth الحالية وعميل Dio أساس قابل للمراجعة في مرحلة backend؛ لا يفترض أن الخادم النهائي يطابقها.
-- سجلات المهام السابقة موثقة في Git و`DECISIONS.md`. القائمة أدناه هي ترتيب العمل المعتمد من الآن.
+- [x] CUTRA-UI-001: Approved colors and light/dark theme.
+- [x] CUTRA-UI-002: Shared typography, controls, fonts, and app icon.
+- [ ] CUTRA-UI-003: Visual review of dark mode with future page designs.
 
-## قاعدة التسليم لكل صفحة
+## Splash
 
-تُنجز صفحة واحدة قبل التالية بهذا الترتيب: استلام theme وتصميم HTML/CSS الخاص بها، تحليل الحالات والتفاعل، تحويل التصميم إلى Flutter، بناء ViewModel وbusiness logic وربط مصدر بيانات محلي عبر Repository، إضافة التنقل والحالات loading/empty/error والاختبارات المناسبة، ثم مراجعة بصرية وتشغيل `flutter analyze` والاختبارات المستهدفة. لا يوقف غياب backend اكتمال السلوك المحلي؛ توثق نقاط التكامل المؤجلة بوضوح. لا توضع طلبات HTTP في Widget أو ViewModel.
+- [x] CUTRA-UI-101: Full HTML-derived content, local SVG, native splash/icon, and five-second Flutter display.
+- [x] Start timing after the first frame and navigate to Login only after five seconds.
+- [x] Verify content, sizes, timing, and route behavior.
 
----
+## Login
 
-## مراحل التطوير
+- [x] CUTRA-UI-301: Arabic design, CustomButton, CustomTextField, validation, loading/error states, and small-screen behavior.
+- [x] Keep credentials in LoginModel, state/validation in LoginViewModel, API call in LoginService, and session persistence in the shared service.
+- [x] Persist a successful session before clearing the loading state; show its status on Login while no later page is built.
+- [x] Support local sign-out and remove links to pages that are not available.
+- [ ] Confirm real Login API and password recovery contract in the backend stage.
 
-### المرحلة 0 — Theme ونظام التصميم
+## Deferred Pages
 
-> الهدف: تأسيس ألوان light/dark ونظام النص والأحجام والأزرار قبل بناء الصفحات؛ تفاصيل كل صفحة تأتي مع HTML/CSS الخاص بها.
+- [ ] CUTRA-UI-201: Home, after its design is supplied.
+- [ ] CUTRA-UI-302: Register, after its design is supplied.
+- [ ] CUTRA-UI-303: Pending/Rejected, after their designs and flow are supplied.
+- [ ] CUTRA-UI-401/402: Automatic Cutting and Result.
+- [ ] CUTRA-UI-501: Manual Cutting.
+- [ ] CUTRA-UI-601/701/801: History, Profile, Support.
 
-- [x] **CUTRA-UI-001 — استلام theme وتحليله**
-  - [x] استخراج الألوان الأساسية من `DESIGN (1).md` إلى `lib/core/constants/colors.dart`.
-- [x] **CUTRA-UI-002 — تنفيذ نظام Theme المتوسط في Flutter**
-  - [x] إضافة 13 لونًا في `colors.dart`، ونظام النص والأحجام والأزرار في `app_theme.dart`.
-  - [x] إنشاء `light_theme.dart` و`dark_theme.dart` وربطهما بجذر التطبيق حسب وضع الجهاز.
-  - [x] تسجيل خطوط IBM Plex وManrope وتشغيل `flutter analyze` واختبارات العرض والتنقل.
-- [ ] **CUTRA-UI-003 — مراجعة الداكن بصريًا**
-  - [ ] مراجعة التباين والحقول والأزرار على الصفحات عند وصول HTML/CSS، وتعديل الدرجات المقترحة عند الحاجة.
+Do not add routes, screen contents, or new implementation for these pages yet. Older Cutting logic and preliminary Register data remain dormant, not completed features.
 
-### المرحلة 1 — Splash Page
+## Backend and Release
 
-> الهدف: مسار بدء تشغيل كامل يمكن اختباره محليًا.
+- [ ] CUTRA-BE-901: Agree the actual server contract and reconcile preliminary Auth fields.
+- [ ] CUTRA-BE-902/903: Integrate and test backend flows after local page work.
+- [ ] CUTRA-QA-1001/1002/1003: Full visual, security, platform, and release checks.
 
-- [x] **CUTRA-UI-101 — Splash UI/UX وbusiness logic**
-  - [x] إضافة flutter_launcher_icons وتوليد أيقونات الهاتف من الشعار الحالي لـAndroid وiOS.
-  - [x] عرض المحتوى الكامل وفق HTML لمدة خمس ثوانٍ قبل التوجيه، مع شعار التطبيق المحلي واختبار توقيت الانتقال.
-  - [x] ربط الشعار بالـNative Splash وتوليد موارد Android وiOS، مع نسخة آمنة لقناع Android 12.
-  - [x] إنشاء أيقونة Cutra بصيغة SVG محلية وعرضها في Splash واعتماد التصميم لأيقونة Android.
-  - [x] استلام HTML/CSS والأصول وتحويلها إلى Flutter باستخدام theme المعتمد.
-  - [x] تنفيذ التهيئة واستعادة حالة الجلسة المحلية عبر ViewModel وRepository.
-  - [x] توجيه المستخدم بحسب الحالة المحلية، مع حالات التحميل والفشل وإعادة المحاولة.
-  - [x] اختبار الانتقالات والتوقيت/التهيئة ومراجعة الواجهة على المقاسات المستهدفة.
+## Completion Gate
 
-### المرحلة 2 — Home Page
-
-> الهدف: شاشة رئيسية مكتملة بالبيانات والسلوك المحلي قبل بدء صفحة أخرى.
-
-- [ ] **CUTRA-UI-201 — Home UI/UX وbusiness logic**
-  - [ ] استلام HTML/CSS وتحويل التخطيط والمكونات إلى Flutter.
-  - [ ] عرض حالة المستخدم والإجراءات الرئيسية والتنقل الفعلي إلى المسارات المتاحة.
-  - [ ] توفير ViewModel ومصدر بيانات محلي واضح، مع loading/empty/error عند الحاجة.
-  - [ ] اختبار السلوك والتنقل ومراجعة الشكل على المقاسات المستهدفة.
-
-### المرحلة 3 — صفحات الحساب
-
-> الهدف: إكمال تدفق المصادقة محليًا؛ تبقى مطابقة API وربطه للمرحلة الأخيرة.
-
-- [ ] **CUTRA-UI-301 — Login**
-  - [ ] تحويل HTML/CSS، والتحقق من المدخلات، وإظهار التقدم والأخطاء.
-  - [ ] تنفيذ تسجيل دخول محلي قابل للاختبار وتحديث حالة الجلسة والتوجيه.
-- [ ] **CUTRA-UI-302 — Register**
-  - [ ] تحويل HTML/CSS، والتحقق من الحقول، وتنفيذ إنشاء حساب محلي وحالات النتيجة.
-- [ ] **CUTRA-UI-303 — Pending وRejected**
-  - [ ] تنفيذ كلتا الحالتين بصريًا ووظيفيًا مع الإجراءات المتاحة والتنقل المناسب.
-- [ ] **CUTRA-UI-304 — إغلاق تدفق الحساب**
-  - [ ] فصل التجربة المحلية عن remote؛ `LocalAuthRepository` الحالي يستعيد الجلسة محليًا لكنه يستخدم AuthRemoteDataSource لبعض إجراءات الحساب، فلا يعد تدفق الحساب المحلي مكتملًا.
-  - [ ] اختبار Splash/Login/Register/Pending/Rejected كمسار واحد، بما فيه تسجيل الخروج واستعادة الجلسة.
-  - [ ] توثيق الفروق بين العقود الحالية والسلوك المحلي لتراجع عند تكامل backend.
-
-### المرحلة 4 — Automatic Cutting وResult
-
-> الهدف: إدخال القياسات، حساب القص، وعرض النتيجة كاملة دون خادم.
-
-- [ ] **CUTRA-UI-401 — Automatic Cutting**
-  - [ ] تحويل HTML/CSS وربط النموذج والتحقق بخوارزمية Cutting الحالية عبر ViewModel.
-  - [ ] معالجة الأبعاد والوحدات والقيود والأخطاء وتعديل المدخلات وإعادة الحساب.
-- [ ] **CUTRA-UI-402 — Result**
-  - [ ] تحويل HTML/CSS وعرض مخطط القص والقياسات والهدر والتنبيهات.
-  - [ ] دعم الرجوع والتعديل والحفظ المحلي للنتيجة عند اكتمال مسار الحفظ.
-  - [ ] اختبار صحة النتائج وحالات الحواف ومراجعة العرض والتفاعل.
-
-### المرحلة 5 — Manual Cutting
-
-> الهدف: مسار قص يدوي مكتمل يستخدم المنطق الموجود ويصل إلى Result.
-
-- [ ] **CUTRA-UI-501 — Manual Cutting UI/UX وbusiness logic**
-  - [ ] تحويل HTML/CSS وتنفيذ إضافة القطع وتحريكها/تعديلها وفق قيود المحرك الحالي.
-  - [ ] دعم التراجع أو إعادة الضبط حيث يقتضي التصميم، وإظهار أخطاء القيود فورًا.
-  - [ ] تمرير النتيجة إلى Result، واختبار التفاعلات وحالات الحواف.
-
-### المرحلة 6 — History
-
-- [ ] **CUTRA-UI-601 — History UI/UX وbusiness logic**
-  - [ ] تحويل HTML/CSS مع قائمة النتائج وحالة الفراغ والبحث/الفرز إن وردا في التصميم.
-  - [ ] حفظ النتائج محليًا وفتحها وحذفها بأمان عبر Repository وViewModel.
-  - [ ] اختبار serialization ودورة الحفظ والفتح والحذف.
-
-### المرحلة 7 — Profile
-
-- [ ] **CUTRA-UI-701 — Profile UI/UX وbusiness logic**
-  - [ ] تحويل HTML/CSS وعرض/تعديل البيانات والتفضيلات المحلية وفق التصميم.
-  - [ ] تنفيذ تسجيل الخروج ومسح بيانات الجلسة والتوجيه الصحيح.
-  - [ ] اختبار الحالة المحلية والتأثير على Splash وHome.
-
-### المرحلة 8 — Support
-
-- [ ] **CUTRA-UI-801 — Support UI/UX وbusiness logic**
-  - [ ] تحويل HTML/CSS وعرض قنوات الدعم والأسئلة أو نموذج الطلب إن ورد.
-  - [ ] تنفيذ التحقق والتفاعل محليًا؛ توثيق أي إرسال خارجي للمرحلة الأخيرة.
-  - [ ] اختبار الإجراءات وحالات النجاح والفشل المحلية.
-
-### المرحلة 9 — تكامل Backend
-
-> تبدأ بعد إغلاق المراحل البصرية والمنطقية السابقة، وتربط البيانات الحقيقية دون إعادة تصميم الصفحات.
-
-- [ ] **CUTRA-BE-901 — مراجعة العقد والخادم**
-  - [ ] تثبيت base URL والمصادقة ونماذج الطلب/الرد والأخطاء مع مالك المشروع.
-  - [ ] مقارنة `AUTH_API_CONTRACTS.md` والخدمات الموجودة بالعقد الفعلي وتحديثها.
-- [ ] **CUTRA-BE-902 — ربط المسارات**
-  - [ ] تنفيذ Remote Data Sources خلف عقود Repository الحالية للحساب والبيانات المطلوبة.
-  - [ ] معالجة tokens والتحديث وفقد الاتصال وحالات الخادم مع الحفاظ على حالة UI.
-  - [ ] إبقاء التخزين المحلي حيث يلزم والتوفيق بين المحلي والبعيد بقرار موثق.
-- [ ] **CUTRA-BE-903 — اختبارات التكامل**
-  - [ ] اختبار تبديل Local/Remote repositories ومسارات النجاح والفشل.
-  - [ ] اختبار التطبيق مع بيئة backend المتاحة دون ترك بيانات تجريبية في الإنتاج.
-
-### المرحلة 10 — الجودة والإطلاق
-
-- [ ] **CUTRA-QA-1001 — فحص شامل**: تنقل ومسارات المستخدم، responsive، accessibility، RTL عند الحاجة، format/analyze/tests/build.
-- [ ] **CUTRA-QA-1002 — مراجعة الأمان**: التخزين الحساس، الجلسات، المدخلات، وأخطاء الشبكة.
-- [ ] **CUTRA-QA-1003 — إعداد الإصدار**: الاسم والأيقونة وnative splash والتوقيع وقائمة الإطلاق.
-
----
-
-## معيار الانتقال
-
-لا تبدأ المرحلة التالية حتى تعمل الصفحة الحالية بواجهتها ومنطقها المحلي، وتجتاز التحقق المناسب، وتُحدّث حالتها هنا. الاعتماد على backend مؤجل فقط؛ لا تؤجل تفاعلًا أو تحققًا يمكن إنجازه محليًا. أي نقص في HTML/CSS أو قرار منتج يسجل في `DECISIONS.md` دون اعتبار الصفحة مكتملة.
+A page is done when its design, interactions, state handling, local logic, lifecycle, navigation, and relevant tests work. Record what remains deferred; do not mark an unseen page complete.

@@ -1,94 +1,56 @@
+import 'package:cutra/core/providers/core_providers.dart';
+import 'package:cutra/features/auth/splash/view_models/splash_view_model.dart';
+import 'package:cutra/features/auth/splash/views/screens/splash_screen.dart';
+import 'package:cutra/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cutra/app/router/auth_status.dart';
-import 'package:cutra/core/providers/core_providers.dart';
-import 'package:cutra/main.dart';
-import 'package:cutra/features/auth/view_models/splash_view_model.dart';
-
 class _FinishedSplash extends SplashViewModel {
-  _FinishedSplash() {
-    state = true;
+  @override
+  bool build() {
+    super.build();
+    return true;
   }
 }
 
 void main() {
-  setUp(() {
-    SharedPreferences.setMockInitialValues(<String, Object>{});
-  });
+  setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  testWidgets('Unauthenticated status redirects to LoginScreen', (
-    WidgetTester tester,
+  testWidgets('Splash remains visible until its timer finishes', (
+    tester,
   ) async {
     final prefs = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
-      overrides: [
-        sharedPreferencesInstanceProvider.overrideWithValue(prefs),
-        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    container
-        .read(authStatusProvider.notifier)
-        .setStatus(AuthStatus.unauthenticated);
-
     await tester.pumpWidget(
-      UncontrolledProviderScope(container: container, child: const MyApp()),
+      ProviderScope(
+        overrides: [
+          sharedPreferencesInstanceProvider.overrideWithValue(prefs),
+        ],
+        child: const MyApp(),
+      ),
     );
+    await tester.pump();
+    expect(find.byType(SplashScreen), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 4999));
+    expect(find.byType(SplashScreen), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1));
     await tester.pumpAndSettle();
-
-    expect(find.text('Login Screen'), findsOneWidget);
+    expect(find.text('مرحبًا بعودتك'), findsOneWidget);
   });
 
-  testWidgets('Pending status redirects to PendingScreen', (
-    WidgetTester tester,
-  ) async {
+  testWidgets('Finished splash opens Login only', (tester) async {
     final prefs = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
-      overrides: [
-        sharedPreferencesInstanceProvider.overrideWithValue(prefs),
-        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    container.read(authStatusProvider.notifier).setStatus(AuthStatus.pending);
-
     await tester.pumpWidget(
-      UncontrolledProviderScope(container: container, child: const MyApp()),
+      ProviderScope(
+        overrides: [
+          sharedPreferencesInstanceProvider.overrideWithValue(prefs),
+          splashViewModelProvider.overrideWith(_FinishedSplash.new),
+        ],
+        child: const MyApp(),
+      ),
     );
     await tester.pumpAndSettle();
-
-    expect(find.text('Your account is pending admin approval'), findsOneWidget);
-  });
-
-  testWidgets('Authenticated status routes to HomeScreen', (
-    WidgetTester tester,
-  ) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final container = ProviderContainer(
-      overrides: [
-        sharedPreferencesInstanceProvider.overrideWithValue(prefs),
-        splashViewModelProvider.overrideWith((ref) => _FinishedSplash()),
-      ],
-    );
-    addTearDown(container.dispose);
-
-    container
-        .read(authStatusProvider.notifier)
-        .setStatus(AuthStatus.authenticated);
-
-    await tester.pumpWidget(
-      UncontrolledProviderScope(container: container, child: const MyApp()),
-    );
-    await tester.pumpAndSettle();
-
-    // HomeScreen shows counter starting at 0
-    expect(find.text('0'), findsOneWidget);
+    expect(find.text('مرحبًا بعودتك'), findsOneWidget);
+    expect(find.text('إنشاء حساب'), findsNothing);
   });
 }

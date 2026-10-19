@@ -1,36 +1,11 @@
-# قواعد Cutra
+# Cutra Rules
 
-## قاعدة التنفيذ
-
-- ابدأ بملف `../agent.md` ثم اقرأ جميع تعليمات `agents/` وفق `README.md` قبل أي عمل.
-- الهيكلة داخل الميزة `models/data/view_models/views`؛ لا تعد إلى `presentation/domain/data` كقالب افتراضي. أعد استخدام exports والطبقات الموجودة دون تكرار.
-
-- طبق theme المرسل من المالك أولًا.
-- نفذ صفحة واحدة مكتملة بواجهتها وتجربتها ومنطقها المحلي واختباراتها قبل التالية، وفق `TASKS.md`.
-- لا تعتبر الشاشة الثابتة أو placeholder إنجازًا للصفحة.
-- أجل تكامل backend النهائي حتى تنتهي صفحات UI/UX وbusiness logic، مع توثيق العقود المؤجلة.
-- لا تضع business logic أو Dio أو Storage مباشرة في Widgets.
-
-## MVVM مع Riverpod
-
-- **View** تعرض state، تجمع الإدخال، وترسل intents فقط.
-- **ViewModel** يدير حالة الصفحة عبر Riverpod ويستدعي منطق المجال وRepository.
-- **Domain** يحمل قواعد التحقق والقص والحساب التي يمكن اختبارها مستقلة عن UI.
-- **Repository** يعزل مصدر البيانات المحلي الآن والبعيد لاحقًا.
-- استخدم Providers لحقن الاعتمادات وكشف الحالة؛ تجنب Provider واحدًا ضخمًا لكل التطبيق.
-
-## SOLID
-
-- مسؤولية واحدة واضحة لكل Class أو Widget أو Service.
-- وسع السلوك دون كسر العقود القائمة قدر الإمكان.
-- يجب أن يصلح أي تنفيذ Repository مكان عقده دون اختلاف غير موثق.
-- لا تنشئ interfaces أو طبقات فارغة بلا حاجة.
-- اعتمد على عقود البيانات والمنطق بدل اعتماد View على تفاصيل التنفيذ.
-
-## المكتبات والملفات المولدة
-
-ابحث عن مكتبة مستقرة قبل بناء حل مخصص لوظيفة معروفة، ووثق سبب الاختيار في `DECISIONS.md` قبل إضافتها وفق قرار المالك. لا تعدل `*.g.dart` أو `*.freezed.dart` يدويًا؛ عدل المصدر وأعد التوليد عند الحاجة.
-
-الشعار SVG هو المصدر؛ لا تعدل PNG أو موارد الأيقونات المولدة بدل مصدرها. أعد التوليد بأوامر `WORKFLOW.md`. تبقى `flutter_launcher_icons` في dev_dependencies. لا تضف اعتمادًا على Freezed/build_runner أو تستخدم أوامرهما قبل الحاجة وإضافتهما فعليًا.
-
-لا تغير مدة Splash المعتمدة (خمس ثوانٍ بعد أول إطار) أو ألوان الشعار دون طلب. لا تعطل TLS لحل أخطاء تنزيل Gradle؛ افصل أخطاء البناء عن أعطال نظام المحاكي.
+1. Read `../agent.md` and the files listed in `README.md` before changing code.
+2. Work on one feature at a time. The active pages are Splash and Login. Obtain the owner's design before creating another page, route, ViewModel, model, or service.
+3. Follow `ARCHITECTURE.md`: View -> Riverpod ViewModel -> Service -> API/storage with `fpdart` `Either<Failure, T>` for functional error handling. Models are data classes only. Avoid forwarding Repository/DataSource layers.
+4. Keep HTTP, storage, cutting rules, and workflow decisions out of Widgets. Keep validation/state/providers out of models.
+5. Do not invent authentication success or claim an unavailable backend action occurred. Backend integration is a later stage.
+6. Preserve the five-second Splash, local SVG, native icon resources, and approved theme unless the owner requests a change.
+7. Update relevant tests and `TASKS.md`, `SYNC_MATRIX.md`, `DECISIONS.md` when behavior changes. Do not mark incomplete pages done.
+8. Do not add dependencies or edit generated files casually. Follow `WORKFLOW.md` for asset regeneration.
+9. Use the `gap` package (`Gap(...)`) exclusively as the primary spacing standard throughout the entire application instead of `SizedBox` for spacing. `SizedBox` is strictly reserved for explicitly sizing child widgets.

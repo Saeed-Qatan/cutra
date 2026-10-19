@@ -1,103 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/providers/core_providers.dart';
+
 import '../../features/auth/views/screens/login_screen.dart';
-import '../../features/auth/views/screens/pending_screen.dart';
-import '../../features/auth/views/screens/register_screen.dart';
-import '../../features/auth/views/screens/rejected_screen.dart';
-import '../../features/auth/views/screens/splash_screen.dart';
-import '../../features/auth/view_models/splash_view_model.dart';
-import '../../features/home/views/screens/home_screen.dart';
+import '../../features/auth/splash/view_models/splash_view_model.dart';
+import '../../features/auth/splash/views/screens/splash_screen.dart';
 import 'app_routes.dart';
-import 'auth_status.dart';
 
-/// Provider for GoRouter configuration with Auth Guard
 final goRouterProvider = Provider<GoRouter>((ref) {
-  final authStatus = ref.watch(authStatusProvider);
   final splashFinished = ref.watch(splashViewModelProvider);
-
-  return GoRouter(
+  final router = GoRouter(
     initialLocation: AppRoutes.splash,
-    routes: <RouteBase>[
-      GoRoute(
-        path: AppRoutes.home,
-        builder: (BuildContext context, GoRouterState state) =>
-            const HomeScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.splash,
-        builder: (BuildContext context, GoRouterState state) =>
-            const SplashScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.login,
-        builder: (BuildContext context, GoRouterState state) =>
-            const LoginScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.register,
-        builder: (BuildContext context, GoRouterState state) =>
-            const RegisterScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.pending,
-        builder: (BuildContext context, GoRouterState state) =>
-            const PendingScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.rejected,
-        builder: (BuildContext context, GoRouterState state) =>
-            const RejectedScreen(),
-      ),
+    routes: [
+      GoRoute(path: AppRoutes.splash, builder: (_, _) => const SplashScreen()),
+      GoRoute(path: AppRoutes.login, builder: (_, _) => const LoginScreen()),
     ],
-    redirect: (BuildContext context, GoRouterState state) {
-      final loc = state.matchedLocation;
-
+    redirect: (_, state) {
       if (!splashFinished) {
-        return loc == AppRoutes.splash ? null : AppRoutes.splash;
+        return state.matchedLocation == AppRoutes.splash
+            ? null
+            : AppRoutes.splash;
       }
-
-      switch (authStatus) {
-        case AuthStatus.checking:
-          if (loc != AppRoutes.splash) {
-            return AppRoutes.splash;
-          }
-          return null;
-
-        case AuthStatus.unauthenticated:
-          if (loc != AppRoutes.login &&
-              loc != AppRoutes.register &&
-              loc != AppRoutes.splash) {
-            return AppRoutes.login;
-          }
-          if (loc == AppRoutes.splash) {
-            return AppRoutes.login;
-          }
-          return null;
-
-        case AuthStatus.pending:
-          if (loc != AppRoutes.pending) {
-            return AppRoutes.pending;
-          }
-          return null;
-
-        case AuthStatus.rejected:
-          if (loc != AppRoutes.rejected) {
-            return AppRoutes.rejected;
-          }
-          return null;
-
-        case AuthStatus.authenticated:
-          if (loc == AppRoutes.login ||
-              loc == AppRoutes.register ||
-              loc == AppRoutes.pending ||
-              loc == AppRoutes.rejected ||
-              loc == AppRoutes.splash) {
-            return AppRoutes.home;
-          }
-          return null;
-      }
+      return state.matchedLocation == AppRoutes.login ? null : AppRoutes.login;
     },
   );
+  ref.onDispose(router.dispose);
+  return router;
 });

@@ -9,11 +9,7 @@ class SplashFooterIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: const [
-        _StatusDots(),
-        Gap(10),
-        _TechnicalDescription(),
-      ],
+      children: const [_StatusDots(), Gap(10), _TechnicalDescription()],
     );
   }
 }
@@ -46,10 +42,7 @@ class _Dot extends StatelessWidget {
     return Container(
       width: 6,
       height: 6,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

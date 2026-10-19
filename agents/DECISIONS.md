@@ -1,67 +1,29 @@
-# القرارات والحالة
+# Decisions and Status
 
-آخر تحديث: 2026-10-12
+Last updated: 2026-10-14
 
-## القرار الحالي المعتمد
+## Current Decision
 
-تُنجز UI/UX وbusiness logic المحلي لكل صفحة وفق MVVM وRiverpod قبل الانتقال إلى التالية. نُفذ theme وSplash، والصفحة التالية Home. يأتي تكامل backend بعد اكتمال جميع الصفحات والمنطق المحلي. داخل كل feature تستخدم `models/data/view_models/views`؛ الترتيب وحالة التنفيذ في `TASKS.md`، والاستثناءات في `ARCHITECTURE.md`.
+Only Splash and Login are active routes. Build each later page only after the owner supplies its design and explicitly starts that feature. Home's counter placeholder and Register/Pending/Rejected screen content were removed. Existing Cutting logic and preliminary Register data remain dormant for now; their presence does not complete those features.
 
-## الحالة الحالية
+The active architecture is `View -> Riverpod ViewModel -> Service -> API/storage`. Models contain data and serialization only. Do not reintroduce forwarding Repository/DataSource layers. The app uses one shared Auth session state; a second router AuthStatus provider was removed. Splash always shows its full content for five seconds and then opens Login. A successful Login is shown on Login until a later destination page exists; local sign-out is available.
 
-- يوجد أساس Flutter مع Riverpod وGoRouter وDio وStorage، وشاشات Auth وHome أولية.
-- يوجد منطق Cutting v1 كسجاد 2D على رول ثابت العرض بوحدة mm، مع `kerfMm` ودوران اختياري، وخوارزمية pure Dart واختبارات.
-- وصل `DESIGN (1).md` وHTML/CSS لـSplash. نُفذ theme وSplash مع المحتوى الكامل وخمس ثوانٍ بعد أول إطار، والشعار المحلي وموارد Native Splash وأيقونات الهاتف. لم يصل التصميم النهائي لبقية الصفحات.
-- عميل Dio وعقود Auth الموجودة عمل سابق؛ تُراجع مقابل backend الفعلي في المرحلة الأخيرة. ليست مصدر البيانات المعتمد للصفحات الجديدة الآن.
-- حُذف `lib/core/config`؛ لا يُدرج ضمن المعمارية المستهدفة.
-- اسم `LocalAuthRepository` لا يثبت أنه محلي بالكامل: يستعيد session محليًا، لكن بعض إجراءات الحساب تستدعي AuthRemoteDataSource. هذه نقطة تنفيذ مؤجلة عند بناء صفحات الحساب، وليست تكامل backend مكتملًا.
+The Login endpoint and request/response shapes are preliminary. Final backend review, password recovery, and any future page routing remain deferred. Do not simulate authentication or announce a backend action that did not occur.
 
-## قرارات تقنية قائمة
+## Established Assets and Tools
 
-- `agent.md` في جذر المشروع نقطة الدخول، و`AGENTS.md` الجذري يوجه إليه. ينقل الوكيل فورًا إلى `agents/` لقراءة كامل التعليمات قبل العمل. لم يُغيّر اسم المجلد إلى `agent/`.
-- Feature-first architecture وSOLID، مع تدفق MVVM وRiverpod المحدد في `ARCHITECTURE.md`.
-- GoRouter للتنقل، Secure Storage للبيانات الحساسة، SharedPreferences للتفضيلات. Freezed/json_serializable/build_runner ليست اعتمادات مضافة؛ تضاف فقط عند الحاجة وبقرار موثق.
-- البحث عن مكتبة مستقرة قبل بناء حل مخصص معروف، وتوثيق أي dependency جديدة.
-- لكل ميزة فرع وعملية تحقق وتسليم وفق `Feature.md` و`GIT_BRANCH_WORKFLOW.md`.
+The theme uses approved colors, IBM Plex/Manrope fonts, and light/dark variants. The SVG icon has a white C, black background, and blue tiles. Native splash and launcher assets are generated from it. `animated_splash_screen` was removed; the Flutter SplashViewModel owns the five-second timer and GoRouter owns navigation.
 
-## سجل تاريخي
+## Historical Context
 
-- 2026-10-01: اعتماد هيكلة وكلاء مختصرة، توسعت لاحقًا إلى 13 ملفًا.
-- 2026-10-05: تنفيذ Auth أولي بعقود Login/Register/Session/Logout. العقد يحتاج مراجعة عند توفر backend.
-- 2026-10-05: بناء Cutting core دون شاشات بناءً على توجيه سابق. التوجيه الحالي يجعل بناء واجهات Cutting جزءًا من المراحل اللاحقة بعد theme وSplash وHome.
-- 2026-10-05: اعتماد قالب PR وفحص جودة GitHub Actions لعمل الفروع.
-- 2026-10-10: تغيير ترتيب العمل إلى theme ثم صفحة مكتملة UI/UX ومنطق محلي، مع تأجيل backend. لا تُنقل حالات Done القديمة تلقائيًا إلى المهام الجديدة.
-- 2026-10-10: طلب المالك theme مختصرًا: `colors.dart` للألوان الأساسية، و`light_colors.dart` و`dark_colors.dart` فقط داخل `core/theme`. الوضع الداكن مولد من اللون الأساسي لأن المرجع لا يحدد لوحة داكنة مستقلة. أزيلت ملفات الخطوط وtokens التي أضيفت في محاولة أوسع.
-- 2026-10-10: اعتمد المالك لاحقًا نظام Theme متوسطًا: 13 لونًا في `colors.dart`، ونظام النص والأحجام والمكونات في `app_theme.dart`، وملفا `light_theme.dart` و`dark_theme.dart`. أُعيدت خطوط IBM Plex وManrope مع تراخيصها. درجات الداكن المقترحة تحتاج مراجعة بصرية على الصفحات لأنها غير محددة في `DESIGN (1).md`.
+- 2026-10-05: Initial Auth contracts and Cutting algorithms were added before their final pages. The final API contract remains unconfirmed.
+- 2026-10-10: The owner set the feature-by-feature order and backend-last direction.
+- 2026-10-12: Login HTML/CSS became the active design. Login moved into `auth/login/`; shared session/user data moved into `auth/shared/`.
+- 2026-10-14: Deferred screen contents were removed from the active app. Home's counter implementation was removed. Cutting logic and preliminary Register data are preserved but disconnected. Router exposes Splash/Login only, and instructions now reflect services and one feature at a time.
 
-## قرارات 2026-10-12
+## Open Questions
 
-- تحديث جميع ملفات التعليمات لتوافق الهيكلة الحالية، ونقل `agents/AGENTS.md` إلى `agent.md` في الجذر، مع ملف اكتشاف `AGENTS.md` دون تكرار القواعد.
-- إزالة animated_splash_screen؛ المؤقت في SplashViewModel والتنقل في GoRouter، دون ملاحة ثانية داخل Widget.
-- اعتماد C أبيض وخلفية #111111 وقطع زرقاء #00439B للشعار، مع الحفاظ على أبعاده وشكله.
-
-- 2026-10-12: اعتماد flutter_launcher_icons ضمن dev_dependencies بطلب المالك لتوليد أيقونات Android وiOS من شعار Cutra. يولد المصدر SVG صورة PNG مع خلفية سوداء معتمة بدقة 1024؛ اسم موارد Android cutra_launcher لتجنب أولوية ملفات ic_launcher القديمة.
-
-- 2026-10-12: بطلب المالك تعرض صفحة Splash كاملة لمدة خمس ثوانٍ بعد أول إطار Flutter. يبدأ فحص الجلسة بالتوازي، ويمنع SplashViewModel التوجيه المبكر. تستخدم الصفحة شعار SVG المحلي بدل رابط الصورة، ويظل Native Splash مقتصرًا على تهيئة المحرك.
-
-- 2026-10-12: ربط شعار Cutra بـflutter_native_splash على Android وiOS. مصدر الشعار SVG؛ يولد `tool/generate_splash_assets_test.dart` صور PNG، مع هوامش آمنة لقناع Android 12. لا يضاف مؤقت إلى Native Splash؛ المؤقت المعتمد يخص صفحة Flutter فقط.
-
-- 2026-10-12: بناء شعار Cutra بصيغة SVG محلية وعرضه عبر flutter_svg بدل صورة الشبكة. تولدت أولًا نسخة VectorDrawable يدويًا، ثم اعتمد flutter_launcher_icons وموارد cutra_launcher بدلها لأيقونة الهاتف.
-
-## أسئلة تؤجل إلى وقتها
-
-- تفاصيل أي أصول أو خطوط خاصة بالصفحات عند وصول HTML/CSS.
-- حسم نطاق المنتج: بعض الوثائق والخوارزميات الحالية للسجاد، بينما النص المعتمد في Splash يقول «أداة هندسية لتقطيع الزجاج». لا تغير نطاق الخوارزميات أو الوحدات لمجرد اختلاف النص.
-- السلوك غير الموضح في HTML/CSS لكل صفحة عند وصولها.
-- base URL وعقد Auth النهائي وحالات أخطاء الخادم.
-- قرار مزامنة History أو إبقائه محليًا.
-- منصة الإطلاق الأولى ومتطلبات الإصدار.
-
-## قالب قرار
-
-```text
-Date:
-Decision:
-Reason:
-Impact:
-Follow-up:
-```
+- The next page design and desired behavior.
+- Final Auth base URL, fields, session policy, and password recovery contract.
+- Product terminology: the Splash footer says glass cutting while the older dormant Cutting logic targets carpet.
+- Target platform and release requirements.

@@ -1,39 +1,9 @@
-# تعليمات الوكلاء
+# Agent Instructions
 
-## قاعدة إلزامية قبل أي عمل
+At the start of every task, open `agents/README.md` and read the instruction files it lists. `agents/TASKS.md` records the current page and completion gates.
 
-أول إجراء للوكيل عند بدء العمل هو التوجه فورًا إلى مجلد `agents/` وقراءة `agents/README.md` ثم جميع ملفات التعليمات المذكورة فيه، قبل فحص الكود أو تعديل الملفات أو تنفيذ الأوامر. يحتوي هذا المجلد كامل الخطة والقواعد والمعمارية وسير العمل. إذا تعذر الوصول إليه، أبلغ المالك ولا تفترض تعليمات بديلة.
+The active application currently has only Splash and Login. Build one complete feature at a time from the owner's supplied theme and HTML/CSS. Do not add routes, UI, models, ViewModels, services, or placeholder screens for future pages until work begins on that feature. The next feature is chosen from the next owner request/design. Backend integration is the final stage.
 
-أسماء ملفات التعليمات المذكورة أدناه نسبية إلى `agents/`. الهيكلة المعتمدة داخل كل feature هي `models/` و`data/` و`view_models/` و`views/screens/` و`views/widgets/`؛ التفاصيل والاستثناءات الحالية في `agents/ARCHITECTURE.md`.
+Use feature-first MVVM with Riverpod and fpdart: `View -> ViewModel -> Service (returns Either<Failure, T>) -> API/storage` when data access is needed. A View renders state and sends actions. A ViewModel owns state, validation, and coordination. A service owns network/storage or substantial independent logic. `models/` contains data classes and serialization only. Do not add Repository or DataSource layers by default.
 
-## نقطة البداية
-
-بعد قراءة التعليمات، حدد الحالة من `PLAN.md` و`TASKS.md`. تم تنفيذ theme وSplash؛ العمل التالي Home. تنجز UI/UX وbusiness logic لكل صفحة محليًا قبل الانتقال، ويأتي ربط backend في المرحلة الأخيرة. لا تعِد بدء المراحل المكتملة دون طلب أو عطل مثبت.
-
-## Codex
-
-- يفحص الكود الموجود ومدخلات التصميم قبل التعديل.
-- يحول HTML/CSS إلى Flutter وفق `Stitch.md` وtheme المعتمد.
-- يطبق MVVM مع Riverpod: View تعرض الحالة، ViewModel ينسقها، وdomain/Repository يحملان المنطق والبيانات.
-- يختبر الصفحة بصريًا ووظيفيًا ويحدث `TASKS.md` و`SYNC_MATRIX.md`.
-- يسجل القرارات المؤثرة في `DECISIONS.md` ويحافظ على SOLID.
-
-## Antigravity
-
-- يراجع وضوح التجربة والتصميم والحالات والتفاعل.
-- يحدد الفجوات في مدخلات theme أو HTML/CSS.
-- يراجع الصفحة المكتملة قبل الانتقال إلى التالية عند الحاجة.
-
-## مالك المشروع
-
-- يرسل theme ثم HTML/CSS والأصول لكل صفحة تباعًا.
-- يحسم قرارات المنتج والتصميم والعقد النهائي للـbackend.
-- يعتمد أي dependency جديدة مؤثرة حسب `RULES.md`.
-
-## قواعد التنفيذ
-
-- استخدم IDs من `TASKS.md` واتبع `Feature.md` للفرع والإغلاق.
-- اقرأ `ARCHITECTURE.md` لتدفق MVVM و`Stitch.md` عند وجود تصميم HTML/CSS.
-- لا تعتبر الواجهة الثابتة ميزة مكتملة؛ يجب أن تعمل بحالاتها ومنطقها المحلي.
-- لا تبدأ تكامل backend النهائي قبل المرحلة المحددة في `TASKS.md`.
-- راجع `GIT_BRANCH_WORKFLOW.md` قبل إنشاء فرع أو Pull Request.
+Auth features are consolidated into `features/auth/` (data, models, view_models, views); Splash and Login own their own views. Preserve the complete five-second Splash and existing theme/logo. Read `agents/ARCHITECTURE.md`, `agents/RULES.md`, and `agents/WORKFLOW.md` before editing. Record behavior, tests, and deferred work in `agents/TASKS.md`, `agents/SYNC_MATRIX.md`, and `agents/DECISIONS.md`.

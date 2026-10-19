@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../app/router/auth_status.dart';
 import '../network/api_client.dart';
 import '../network/dio_api_client.dart';
 import '../storage/secure_storage_service.dart';
@@ -28,22 +27,4 @@ final sharedPreferencesInstanceProvider = Provider<SharedPreferences>((ref) {
 final sharedPrefsProvider = Provider<StorageService>((ref) {
   final prefs = ref.watch(sharedPreferencesInstanceProvider);
   return SharedPrefsService(prefs);
-});
-
-/// Notifier managing application AuthStatus
-class AuthStatusNotifier extends Notifier<AuthStatus> {
-  @override
-  AuthStatus build() {
-    return AuthStatus.checking;
-  }
-
-  /// Update active AuthStatus
-  void setStatus(AuthStatus status) {
-    state = status;
-  }
-}
-
-/// Riverpod provider for active AuthStatus
-final authStatusProvider = NotifierProvider<AuthStatusNotifier, AuthStatus>(() {
-  return AuthStatusNotifier();
 });

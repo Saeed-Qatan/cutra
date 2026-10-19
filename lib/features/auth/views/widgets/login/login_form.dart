@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-/// Presentation form for user login with validation and submission feedback.
+import '../../../../../core/widgets/common/custom_button.dart';
+import '../../../../../core/widgets/common/custom_text_field.dart';
+import '../../../models/auth_models.dart';
+import '../../../view_models/auth_state.dart';
+
+/// Presentation form specific to user login with validation and submission feedback.
 class LoginForm extends StatefulWidget {
   final bool isSubmitting;
   final String? errorMessage;
-  final Future<void> Function({required String email, required String password}) onSubmit;
-  final VoidCallback onNavigateToRegister;
+  final Future<void> Function(LoginModel credentials) onSubmit;
+  final VoidCallback onForgotPassword;
 
   const LoginForm({
     super.key,
     required this.isSubmitting,
     this.errorMessage,
     required this.onSubmit,
-    required this.onNavigateToRegister,
+    required this.onForgotPassword,
   });
 
   @override
@@ -34,77 +39,102 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Login Screen',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const Gap(24),
-          TextFormField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
-            ),
-            validator: _requiredValidator,
-          ),
-          const Gap(12),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(),
-            ),
-            validator: _requiredValidator,
-          ),
-          if (widget.errorMessage != null) ...[
-            const Gap(12),
+    return AutofillGroup(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Text(
-              widget.errorMessage!,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
+              'مرحبًا بعودتك',
+              style: Theme.of(
+                context,
+              ).textTheme.headlineLarge?.copyWith(fontSize: 26),
+            ),
+            const Gap(4),
+            Text(
+              'سجّل الدخول للوصول إلى أدوات التقطيع الخاصة بورشتك',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: const Color(0xFF666666),
+                height: 1.6,
               ),
             ),
+            const Gap(24),
+            CustomTextField(
+              label: 'البريد الإلكتروني',
+              hintText: 'أدخل البريد الإلكتروني',
+              prefixIcon: Icons.mail_outline,
+              enabled: !widget.isSubmitting,
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              autofillHints: const [
+                AutofillHints.username,
+                AutofillHints.email,
+              ],
+              validator: LoginValidators.email,
+            ),
+            const Gap(16),
+            CustomTextField(
+              label: 'كلمة المرور',
+              hintText: 'أدخل كلمة المرور',
+              prefixIcon: Icons.lock_outline,
+              enabled: !widget.isSubmitting,
+              controller: _passwordController,
+              isPassword: true,
+              autofillHints: const [AutofillHints.password],
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _submit(),
+              validator: LoginValidators.password,
+            ),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: TextButton(
+                onPressed: widget.isSubmitting ? null : widget.onForgotPassword,
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF666666),
+                ),
+                child: const Text(
+                  'نسيت كلمة المرور؟',
+                  style: TextStyle(fontSize: 13),
+                ),
+              ),
+            ),
+            if (widget.errorMessage != null) ...[
+              const Gap(12),
+              Text(
+                widget.errorMessage!,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ],
+            const Gap(8),
+            CustomButton(
+              text: 'تسجيل الدخول',
+              isLoading: widget.isSubmitting,
+              trailingIcon: const Icon(
+                Icons.arrow_back,
+                textDirection: TextDirection.ltr,
+                size: 18,
+                color: Colors.white,
+              ),
+              onPressed: widget.isSubmitting ? null : _submit,
+            ),
           ],
-          const Gap(20),
-          ElevatedButton(
-            onPressed: widget.isSubmitting ? null : _submit,
-            child: widget.isSubmitting
-                ? const SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Login'),
-          ),
-          TextButton(
-            onPressed: widget.isSubmitting ? null : widget.onNavigateToRegister,
-            child: const Text('Create account'),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  String? _requiredValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Required';
-    }
-    return null;
-  }
-
   Future<void> _submit() async {
+    if (widget.isSubmitting) return;
     if (!_formKey.currentState!.validate()) {
       return;
     }
     await widget.onSubmit(
-      email: _emailController.text,
-      password: _passwordController.text,
+      LoginModel(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ),
     );
   }
 }

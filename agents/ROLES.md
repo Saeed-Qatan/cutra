@@ -1,26 +1,13 @@
-# الأدوار والمسؤوليات
+# Roles and Responsibilities
 
-## مالك المشروع
+## Owner
 
-- يرسل theme المرجعي، ثم HTML/CSS والأصول لكل صفحة.
-- يحدد سلوك المنتج والحالات غير الواضحة وأولوية الصفحات.
-- يحسم عقد backend النهائي والمكتبات الجديدة وقرارات الإطلاق.
+Supply the theme and each page's HTML/CSS/assets and decide the next feature and final backend contract.
 
 ## Codex
 
-- يقرأ `../agent.md` وجميع ملفات `agents/` أولًا، ويطابق التعليمات مع المسارات الفعلية قبل التنفيذ.
+Read `../agent.md` and all `agents/` instructions first. Implement only the active feature using MVVM/Riverpod, verify it, and update tasks/decisions. Keep future routes and screens out of the active application.
 
-- يفحص الشاشات والمنطق الموجودين ويحوّل التصميم إلى Flutter.
-- يطبق MVVM وRiverpod ومنطق الصفحة المحلي، ويضيف الاختبارات المناسبة.
-- يستخدم `models/data/view_models/views` داخل الميزة ويحافظ على ملفات التوافق، ويولد موارد Splash والأيقونات من SVG عند تغيير الشعار.
-- يراجع الشكل والتفاعل ويحدث `TASKS.md` و`SYNC_MATRIX.md` و`DECISIONS.md` عند الحاجة.
+## Design Review
 
-## Antigravity
-
-- يراجع UX والحالات وتدفق المستخدم.
-- يكشف نقص التصميم أو السلوك قبل إغلاق الصفحة.
-- يراجع التطابق البصري وhandoff عند الحاجة.
-
-## التعاون
-
-اختيار الصفحة من `TASKS.md` -> استلام تصميمها -> تنفيذ UI/UX والمنطق المحلي -> التحقق والإغلاق -> الصفحة التالية. بعد جميع الصفحات: تكامل backend ثم الجودة والإطلاق. تعليمات المالك الحالية هي المرجع عند تغيير الترتيب.
+Review visual fidelity, interaction, responsive states, and missing design details before declaring a page complete.

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import '../../../../../core/constants/app_assets.dart';
+import '../../../../../../core/constants/app_assets.dart';
 
 /// Center identity block displaying the Cutra logo, brand name, divider, and tagline.
 class SplashIdentityBlock extends StatelessWidget {

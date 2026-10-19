@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-/// Paints a subtle engineering blueprint grid on the background.
+/// Shared engineering grid painter used across Auth screens (Splash, Login, etc.).
 class GridBackgroundPainter extends CustomPainter {
-  const GridBackgroundPainter();
+  final Color color;
+  const GridBackgroundPainter({this.color = const Color(0x09111111)});
 
   @override
   void paint(Canvas canvas, Size size) {
     const gridSize = 24.0;
     final paint = Paint()
-      ..color = const Color(0x09111111)
+      ..color = color
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
@@ -22,5 +23,6 @@ class GridBackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant GridBackgroundPainter oldDelegate) => false;
+  bool shouldRepaint(covariant GridBackgroundPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

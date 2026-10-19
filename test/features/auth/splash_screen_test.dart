@@ -1,28 +1,15 @@
-import 'package:cutra/app/router/auth_status.dart';
-import 'package:cutra/core/providers/core_providers.dart';
 import 'package:cutra/main.dart';
-import 'package:cutra/features/auth/view_models/splash_view_model.dart';
-import 'package:cutra/features/auth/view_models/auth_view_model.dart';
-import 'package:cutra/features/auth/views/screens/splash_screen.dart';
+import 'package:cutra/features/auth/splash/view_models/splash_view_model.dart';
+import 'package:cutra/features/auth/splash/views/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class _CheckingAuthController extends AuthController {
-  @override
-  Future<AuthState> build() async => const AuthState.checking();
-}
-
 void main() {
   testWidgets('Splash leaves navigation to the auth router', (tester) async {
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authControllerProvider.overrideWith(_CheckingAuthController.new),
-        ],
-        child: const MaterialApp(home: SplashScreen()),
-      ),
+      const ProviderScope(child: MaterialApp(home: SplashScreen())),
     );
     await tester.pump();
     await tester.runAsync(() async {
@@ -43,22 +30,15 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('Ready session cannot skip the five-second splash', (
+  testWidgets('Splash stays visible for five seconds then navigates to Login', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    final container = ProviderContainer(
-      overrides: [
-        authViewModelProvider.overrideWith(_CheckingAuthController.new),
-      ],
-    );
+    final container = ProviderContainer();
     addTearDown(container.dispose);
-    container
-        .read(authStatusProvider.notifier)
-        .setStatus(AuthStatus.unauthenticated);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: container, child: const MyApp()),
     );
@@ -75,7 +55,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1));
     await tester.pumpAndSettle();
     expect(find.byType(SplashScreen), findsNothing);
-    expect(find.text('Login Screen'), findsOneWidget);
+    expect(find.text('مرحبًا بعودتك'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

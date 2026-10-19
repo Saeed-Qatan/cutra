@@ -1,37 +1,16 @@
-# خطة Cutra
+# Cutra Development Plan
 
-## الهدف
+## Sequence
 
-تطوير Cutra شاشة بعد شاشة. يصل theme من مالك المشروع أولًا، ثم يصل HTML/CSS لكل صفحة. يحول التصميم إلى Flutter وتنجز UI/UX وbusiness logic محليًا باستخدام MVVM وRiverpod قبل بدء الصفحة التالية. تكامل backend يأتي بعد اكتمال المسارات المحلية.
+1. Theme and shared controls: implemented.
+2. Splash: implemented with full five-second display and local icon.
+3. Login: current feature; finish its UI, state, validation, session behavior, and tests.
+4. Next page: start only after the owner supplies its design and behavior. Home, Register, Pending, Rejected, Cutting, Result, History, Profile, and Support are deferred.
+5. Review the real API contract and integrate the backend after the local page flows are complete.
+6. Run full quality and release checks.
 
-## الترتيب المعتمد
+Finish a page's UI/UX and local business logic before moving to the next. Do not build placeholder routes or feature code in advance. See `TASKS.md` for completion status.
 
-1. تطبيق theme ونظام التصميم.
-2. Splash، ثم Home.
-3. صفحات الحساب: Login وRegister وPending وRejected.
-4. Automatic Cutting وResult، ثم Manual Cutting.
-5. History، ثم Profile، ثم Support.
-6. مراجعة عقود API وربط backend.
-7. الجودة النهائية والإطلاق.
+## MVVM
 
-التفصيل وحالة كل مرحلة في `TASKS.md`. الترتيب لا يجعل الشاشات الموجودة مسبقًا مكتملة تلقائيًا؛ تُراجع مقابل تصميم المالك ومعيار الإغلاق الجديد.
-
-## تعريف الإنجاز
-
-كل صفحة تشمل: تصميم Flutter مطابقًا للمرجع، تفاعلًا وتنقلًا، حالات loading/empty/error الملائمة، ViewModel في Riverpod، منطقًا مستقلًا عن Widgets، Repository محليًا عند الحاجة، واختبارات مناسبة. توثّق عقود البيانات التي ستستبدل بمصدر remote لاحقًا. لا يبدأ تنفيذ صفحة تالية لمجرد اكتمال مظهر الصفحة الحالية.
-
-## تدفق MVVM
-
-`View -> ViewModel (Riverpod) -> use case/service عند الحاجة -> Repository contract -> Local Data Source`.
-
-تعرض View الحالة وترسل أفعال المستخدم. يدير ViewModel الحالة وينسق المنطق. يملك Repository مصدر البيانات. عند مرحلة backend تضاف Remote Data Sources خلف العقود نفسها، فلا يتغير تصميم الشاشات بسبب مصدر البيانات.
-
-## مدخلات التصميم
-
-الـtheme هو المرجع الأول. يرسل المالك HTML/CSS والأصول لكل صفحة تباعًا. يحدد `Stitch.md` طريقة تحويلها، و`Feature.md` طريقة إغلاق كل ميزة. عند نقص مدخل ضروري توثق الفجوة في `DECISIONS.md`.
-
-## الحالة الحالية
-
-نُفذ theme، ووصل HTML/CSS لـSplash وتم تحويل محتواها كاملًا مع مؤقت خمس ثوانٍ وشعار محلي وNative Splash وأيقونات الهاتف. الخطوة التالية Home وفق `TASKS.md`؛ Home الحالية عداد أولي. شاشات الحساب الأخرى أولية ومنطق Cutting قابل لإعادة الاستخدام.
-
-الهيكلة المعتمدة داخل الميزة هي `models/data/view_models/views`، مع استثناء الخوارزميات وملفات التوافق الموضحة في `ARCHITECTURE.md`. توجد طبقة API مبدئية، وبعض إجراءات Auth تستدعيها حاليًا؛ يجب فصل التجربة المحلية عند تنفيذ صفحات الحساب، لا اعتبار backend أو الحساب المحلي مكتملين.
+`View -> Riverpod ViewModel -> Service -> API/storage` when a service is needed. Views only render and send intents. ViewModels own state, validation, and orchestration. Services own external access or independent algorithms. Models hold data and serialization only. Use no Repository/DataSource layer unless a later requirement makes it necessary.

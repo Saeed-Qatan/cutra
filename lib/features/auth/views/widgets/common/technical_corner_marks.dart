@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Renders 4 technical corner mark brackets for engineering layout design.
+/// Shared corner marks used across Auth screens (Splash, Login, etc.).
 class TechnicalCornerMarks extends StatelessWidget {
   const TechnicalCornerMarks({super.key});
 
@@ -16,10 +16,46 @@ class TechnicalCornerMarks extends StatelessWidget {
           padding: const EdgeInsets.all(padding),
           child: Stack(
             children: const [
-              Positioned(top: 0, right: 0, child: _CornerMark(size: size, color: color, top: true, right: true)),
-              Positioned(top: 0, left: 0, child: _CornerMark(size: size, color: color, top: true, left: true)),
-              Positioned(bottom: 0, right: 0, child: _CornerMark(size: size, color: color, bottom: true, right: true)),
-              Positioned(bottom: 0, left: 0, child: _CornerMark(size: size, color: color, bottom: true, left: true)),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: _CornerMark(
+                  size: size,
+                  color: color,
+                  top: true,
+                  right: true,
+                ),
+              ),
+              Positioned(
+                top: 0,
+                left: 0,
+                child: _CornerMark(
+                  size: size,
+                  color: color,
+                  top: true,
+                  left: true,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: _CornerMark(
+                  size: size,
+                  color: color,
+                  bottom: true,
+                  right: true,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: _CornerMark(
+                  size: size,
+                  color: color,
+                  bottom: true,
+                  left: true,
+                ),
+              ),
             ],
           ),
         ),
@@ -53,7 +89,9 @@ class _CornerMark extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
           top: top ? BorderSide(color: color, width: 1.0) : BorderSide.none,
-          bottom: bottom ? BorderSide(color: color, width: 1.0) : BorderSide.none,
+          bottom: bottom
+              ? BorderSide(color: color, width: 1.0)
+              : BorderSide.none,
           left: left ? BorderSide(color: color, width: 1.0) : BorderSide.none,
           right: right ? BorderSide(color: color, width: 1.0) : BorderSide.none,
         ),

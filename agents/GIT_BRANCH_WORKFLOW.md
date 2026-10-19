@@ -1,28 +1,5 @@
 # Git Branch Workflow
 
-كل ميزة لها فرع مستقل من `develop`، وتغلق صفحتها الحالية وفق `TASKS.md` قبل بدء الصفحة التالية. theme وSplash منفذان؛ Home التالية ما لم يطلب المالك تعديلًا محددًا. لا تُعامل مراحل backend كجزء من فرع واجهة صفحة مبكرًا.
+Use the current owner-requested branch `AUTH` for the current work. Inspect Git status before edits and preserve existing work. Do not create branches, commits, pushes, or pull requests without the owner's request.
 
-| النوع | المثال | الاستخدام |
-| --- | --- | --- |
-| Integration | `develop` | تجميع الميزات |
-| Feature | `feature/theme`, `feature/splash`, `feature/home` | تنفيذ ميزة أو صفحة كاملة |
-| Fix | `fix/<name>` | إصلاح محدود |
-| Docs | `docs/<name>` | توثيق |
-
-## قبل بدء فرع
-
-افحص حالة المستودع والتغييرات الحالية، وراجع `TASKS.md` و`Feature.md`. أنشئ فرعًا من `develop` عندما يكون ذلك آمنًا للتغييرات الموجودة. لا تنقل تغييرات غير محفوظة بين الفروع بلا مراجعة.
-
-## أثناء العمل
-
-اربط التغييرات بـtask ID. أكمل UI/UX وViewModel والمنطق المحلي والاختبارات في نطاق الصفحة أو الميزة. وثق عقود backend المؤجلة، ولا تدخل الربط النهائي مبكرًا. حدّث `SYNC_MATRIX.md` و`DECISIONS.md` عند تغير السلوك أو القرار. شغّل code generation فقط عند تغير مصادر النماذج المولدة.
-
-## قبل Pull Request
-
-- تحقق بصريًا ووظيفيًا من الصفحة المكتملة.
-- شغّل `flutter analyze --no-pub` والاختبارات المستهدفة؛ شغّل المجموعة العامة حين يتأثر تدفق مشترك.
-- شغّل مولدًا فقط إذا كان اعتمادًا فعليًا وله مصدر تغير. للشعار اتبع تسلسل `WORKFLOW.md`؛ لا تشغّل build_runner افتراضيًا لأنه غير مضاف حاليًا.
-- استخدم `.github/pull_request_template.md`، واذكر مصدر التصميم، السلوك المحلي، الاختبارات، وما ينتظر backend.
-- يستهدف PR فرع `develop`.
-
-بعد دمج الميزة وتحديث `develop`، ابدأ فرع الميزة التالية وفق ترتيب `TASKS.md`، ولا تعِد فتح مهمة مكتملة تلقائيًا. وثق موارد الأيقونات المولدة مع مصدر SVG وإعدادات التوليد في التغيير نفسه. لا تنشئ commit أو PR لمجرد تعديل التعليمات دون طلب المالك.
+Develop one page at a time. Before a handoff, verify the active UI, run `flutter analyze --no-pub` and relevant tests, and update `TASKS.md`/`SYNC_MATRIX.md`. After the owner starts another feature, use the branch strategy they request. Backend integration remains a later stage.

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/widgets/app_error_widget.dart';
-import '../../view_models/auth_view_model.dart';
 import '../../view_models/splash_view_model.dart';
-import '../widgets/splash/grid_background_painter.dart';
-import '../widgets/splash/splash_footer_indicator.dart';
-import '../widgets/splash/splash_header_bar.dart';
-import '../widgets/splash/splash_identity_block.dart';
-import '../widgets/splash/technical_corner_marks.dart';
+import '../../../views/widgets/common/grid_background_painter.dart';
+import '../widgets/splash_footer_indicator.dart';
+import '../widgets/splash_header_bar.dart';
+import '../widgets/splash_identity_block.dart';
+import '../../../views/widgets/common/technical_corner_marks.dart';
 
-/// Displays the full identity while the session initializes in parallel.
+/// Displays the full identity for the five-second startup period.
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -29,14 +27,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authViewModelProvider);
-    final splashFinished = ref.watch(splashViewModelProvider);
-    final failureMessage = authState.when(
-      loading: () => null,
-      error: (error, _) => error.toString(),
-      data: (state) => state.failure?.message,
-    );
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -46,18 +36,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           ),
           const TechnicalCornerMarks(),
           const Positioned.fill(child: _SplashContent()),
-          if (splashFinished && failureMessage != null)
-            Positioned.fill(
-              child: ColoredBox(
-                color: Colors.white,
-                child: Center(
-                  child: AppErrorWidget(
-                    message: failureMessage,
-                    onRetry: () => ref.invalidate(authViewModelProvider),
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
