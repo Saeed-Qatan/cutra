@@ -57,17 +57,26 @@ class CustomButton extends StatelessWidget {
 
     return SizedBox(
       width: width,
-      height: height,
-      child: Material(
-        color: _resolveBackgroundColor(context),
-        shape: _resolveShape(borderRadius),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: effectiveOnPressed,
-          child: Center(
-            child: isLoading
-                ? _buildLoadingIndicator(context)
-                : _buildContent(context),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: height),
+        child: Material(
+          color: _resolveBackgroundColor(context),
+          shape: _resolveShape(borderRadius),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: effectiveOnPressed,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Center(
+                child: isLoading
+                    ? Semantics(
+                        label: 'جارٍ معالجة $text',
+                        liveRegion: true,
+                        child: _buildLoadingIndicator(context),
+                      )
+                    : _buildContent(context),
+              ),
+            ),
           ),
         ),
       ),
@@ -105,10 +114,7 @@ class CustomButton extends StatelessWidget {
     if (variant == ButtonVariant.outline) {
       return RoundedRectangleBorder(
         borderRadius: borderRadius,
-        side: const BorderSide(
-          color: AppColors.outline,
-          width: _borderWidth,
-        ),
+        side: const BorderSide(color: AppColors.outline, width: _borderWidth),
       );
     }
     return RoundedRectangleBorder(borderRadius: borderRadius);
@@ -138,19 +144,11 @@ class CustomButton extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (leadingIcon != null) ...[
-          leadingIcon!,
-          const Gap(_iconSpacing),
-        ],
-        Text(
-          text,
-          style: textStyle,
-          textAlign: TextAlign.center,
+        if (leadingIcon != null) ...[leadingIcon!, const Gap(_iconSpacing)],
+        Flexible(
+          child: Text(text, style: textStyle, textAlign: TextAlign.center),
         ),
-        if (trailingIcon != null) ...[
-          const Gap(_iconSpacing),
-          trailingIcon!,
-        ],
+        if (trailingIcon != null) ...[const Gap(_iconSpacing), trailingIcon!],
       ],
     );
   }

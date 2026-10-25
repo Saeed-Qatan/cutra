@@ -5,4 +5,10 @@ abstract class AppRoutes {
 
   /// Login screen route
   static const String login = '/login';
+
+  /// Register screen route
+  static const String register = '/register';
+
+  /// Local password-recovery preview
+  static const String passwordRecovery = '/password-recovery';
 }
