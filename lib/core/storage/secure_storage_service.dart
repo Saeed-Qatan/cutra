@@ -7,7 +7,7 @@ class SecureStorageService implements StorageService {
   final FlutterSecureStorage _secureStorage;
 
   SecureStorageService({FlutterSecureStorage? secureStorage})
-      : _secureStorage = secureStorage ?? const FlutterSecureStorage();
+    : _secureStorage = secureStorage ?? const FlutterSecureStorage();
 
   @override
   Future<String?> readString(String key) async {

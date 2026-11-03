@@ -14,17 +14,11 @@ abstract class ErrorHandler {
     }
 
     if (error is CacheException) {
-      return CacheFailure(
-        error.message,
-        code: error.code,
-      );
+      return CacheFailure(error.message, code: error.code);
     }
 
     if (error is AuthException) {
-      return AuthFailure(
-        error.message,
-        code: error.code,
-      );
+      return AuthFailure(error.message, code: error.code);
     }
 
     if (error is AppException) {

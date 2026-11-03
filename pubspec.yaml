@@ -50,6 +50,8 @@ dependencies:
   flutter_svg: ^2.3.0
   hooks_riverpod: ^3.4.3
   fpdart: ^1.2.0
+  pinput: ^6.0.2
+  awesome_snackbar_content: ^0.1.8
 dev_dependencies:
   flutter_test:
     sdk: flutter

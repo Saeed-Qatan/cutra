@@ -3,34 +3,6 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../core/constants/colors.dart';
 
-/// Title header for the Register screen derived from HTML specification.
-class RegisterHeader extends StatelessWidget {
-  const RegisterHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'إنشاء حساب جديد',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF111827),
-            height: 1.2,
-          ),
-        ),
-        const Gap(4),
-        const Text(
-          'أدخل بيانات الورشة للتحقق منها محليًا',
-          style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-        ),
-      ],
-    );
-  }
-}
-
 /// Technical footer for the Register screen with login navigation and engine spec.
 class RegisterFooter extends StatelessWidget {
   final VoidCallback onLoginTap;
@@ -60,7 +32,7 @@ class RegisterFooter extends StatelessWidget {
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.primary,
                   padding: const EdgeInsets.symmetric(horizontal: 6),
-                  minimumSize: Size(48, 48),
+                  minimumSize: const Size(48, 48),
                   textStyle: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,

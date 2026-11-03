@@ -4,7 +4,7 @@ import 'package:flutter_gutter/flutter_gutter.dart';
 import '../../../../../../core/constants/colors.dart';
 import '../../../../../../core/utils/app_validators.dart';
 import '../../../../../../core/widgets/common/custom_button.dart';
-import '../../../../../../core/widgets/common/custom_snackbar.dart';
+import '../../../../../../core/utils/awesome_snackbar_extensions.dart';
 
 /// E-mail form matching the compact recovery design.
 class RecoveryEmailForm extends StatefulWidget {
@@ -55,7 +55,7 @@ class _RecoveryEmailFormState extends State<RecoveryEmailForm> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 280),
             child: const Text(
-              'أدخل البريد الإلكتروني المعتمد لورشتك للتحقق من صيغته. إرسال الرمز سيتاح بعد ربط الخدمة.',
+              'أدخل بريد الورشة لمتابعة معاينة التحقق المحلية. لن يُرسل رمز فعلي.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
@@ -130,7 +130,7 @@ class _RecoveryEmailFormState extends State<RecoveryEmailForm> {
                 label: 'البريد الإلكتروني للورشة',
                 child: TextFormField(
                   controller: _emailController,
-                  enabled: !widget.isSubmitting && !widget.isSuccess,
+                  enabled: !widget.isSubmitting,
                   textDirection: TextDirection.ltr,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
@@ -167,60 +167,28 @@ class _RecoveryEmailFormState extends State<RecoveryEmailForm> {
               ),
               const Gutter(),
               CustomButton(
-                text: widget.isSuccess ? 'تعديل البريد' : 'التحقق من البريد',
+                text: 'متابعة المعاينة المحلية',
                 isLoading: widget.isSubmitting,
-                trailingIcon: widget.isSuccess
-                    ? null
-                    : const Icon(
-                        Icons.arrow_back,
-                        size: 18,
-                        color: Colors.white,
-                      ),
+                trailingIcon: const Icon(
+                  Icons.arrow_back,
+                  size: 18,
+                  color: Colors.white,
+                ),
                 onPressed: widget.isSubmitting ? null : _submit,
               ),
             ],
           ),
         ),
-        if (widget.isSuccess) ...[
-          const Gutter(),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0F9F4),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFB7E2CC)),
-            ),
-            child: const Row(
-              children: [
-                Icon(Icons.check_circle_outline, color: AppColors.success),
-                Gutter.small(),
-                Expanded(
-                  child: Text(
-                    'صيغة البريد صحيحة. لم يُرسل رابط استعادة بعد.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.onSurfaceMuted,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ],
     );
   }
 
   void _submit() {
     if (widget.isSubmitting) return;
-    if (widget.isSuccess) {
-      widget.onSubmit(_emailController.text.trim());
-      return;
-    }
     if (_formKey.currentState!.validate()) {
       widget.onSubmit(_emailController.text.trim());
     } else {
-      CustomSnackbar.error(context, 'يرجى إدخال بريد إلكتروني صالح');
+      context.showErrorSnackbar('يرجى إدخال بريد إلكتروني صالح');
     }
   }
 }

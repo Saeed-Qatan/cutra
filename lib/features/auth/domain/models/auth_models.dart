@@ -3,10 +3,7 @@ class LoginModel {
   final String email;
   final String password;
 
-  const LoginModel({
-    required this.email,
-    required this.password,
-  });
+  const LoginModel({required this.email, required this.password});
 
   factory LoginModel.fromJson(Map<String, dynamic> json) {
     return LoginModel(
@@ -15,10 +12,7 @@ class LoginModel {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'email': email,
-    'password': password,
-  };
+  Map<String, dynamic> toJson() => {'email': email, 'password': password};
 }
 
 /// Request model containing workshop registration data.
@@ -41,7 +35,8 @@ class RegisterModel {
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) {
     return RegisterModel(
-      workshopName: json['workshop_name'] as String? ?? json['name'] as String? ?? '',
+      workshopName:
+          json['workshop_name'] as String? ?? json['name'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
       email: json['email'] as String? ?? '',
       address: json['address'] as String? ?? '',

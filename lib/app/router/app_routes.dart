@@ -11,4 +11,7 @@ abstract class AppRoutes {
 
   /// Local password-recovery preview
   static const String passwordRecovery = '/password-recovery';
+
+  /// OTP code verification screen
+  static const String otpVerification = '/otp-verification';
 }

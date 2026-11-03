@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/views/screens/login_screen.dart';
+import '../../features/auth/presentation/views/screens/otp_verification_screen.dart';
 import '../../features/auth/presentation/views/screens/password_recovery_screen.dart';
 import '../../features/auth/presentation/views/screens/register_screen.dart';
 import '../../features/auth/presentation/splash/view_models/splash_view_model.dart';
@@ -23,6 +24,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.passwordRecovery,
         builder: (_, _) => const PasswordRecoveryScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.otpVerification,
+        builder: (_, state) =>
+            OtpVerificationScreen(recipientEmail: state.extra as String? ?? ''),
+      ),
     ],
     redirect: (_, state) {
       if (!splashFinished) {
@@ -31,7 +37,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             : AppRoutes.splash;
       }
       if (state.matchedLocation == AppRoutes.register ||
-          state.matchedLocation == AppRoutes.passwordRecovery) {
+          state.matchedLocation == AppRoutes.passwordRecovery ||
+          state.matchedLocation == AppRoutes.otpVerification) {
         return null;
       }
       return state.matchedLocation == AppRoutes.login ? null : AppRoutes.login;

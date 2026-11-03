@@ -30,9 +30,8 @@
 ## Verification
 
 - [ ] `flutter pub get`
-- [ ] `dart run build_runner build --delete-conflicting-outputs`
+- [ ] `dart format --output=none --set-exit-if-changed .`
 - [ ] `flutter analyze --no-pub`
-- [ ] `flutter test --no-pub`
 
 إذا تم تخطي أمر، اذكر السبب:
 

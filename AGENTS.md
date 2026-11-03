@@ -74,12 +74,13 @@ Every feature must follow this structure:
 - Install dependencies: `flutter pub get`
 - Run app: `flutter run`
 - Analyze: `flutter analyze`
-- Run tests: `flutter test`
+- Tests: do not create or run a `test/` suite unless the owner requests it separately.
 - Format: `dart format .`
 
 ## Review Expectations
 
-- Every change must pass `flutter analyze` and `flutter test`.
+- Every change must pass formatting and `flutter analyze`.
+- Do not create test files unless the owner requests them separately.
 - Check for layer boundary violations.
 - Check that only Riverpod is used (no Cubit/Bloc).
 - Check that the correct provider type is chosen.

@@ -10,19 +10,20 @@ class DioApiClient implements ApiClient {
   final Dio _dio;
 
   DioApiClient({Dio? dio, String? baseUrl})
-      : _dio = dio ??
-            Dio(
-              BaseOptions(
-                baseUrl: baseUrl ?? _defaultBaseUrl,
-                connectTimeout: _timeout,
-                receiveTimeout: _timeout,
-                sendTimeout: _timeout,
-                headers: <String, String>{
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-                },
-              ),
-            );
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: baseUrl ?? _defaultBaseUrl,
+              connectTimeout: _timeout,
+              receiveTimeout: _timeout,
+              sendTimeout: _timeout,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+              },
+            ),
+          );
 
   @override
   Future<dynamic> get(
@@ -114,10 +115,6 @@ class DioApiClient implements ApiClient {
   ServerException _handleDioError(DioException e) {
     final statusCode = e.response?.statusCode;
     final message = e.response?.statusMessage ?? e.message ?? 'Server error';
-    return ServerException(
-      message,
-      statusCode: statusCode,
-      code: e.type.name,
-    );
+    return ServerException(message, statusCode: statusCode, code: e.type.name);
   }
 }

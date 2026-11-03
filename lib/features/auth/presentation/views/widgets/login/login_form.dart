@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../core/widgets/common/custom_button.dart';
 import '../../../../../../core/widgets/common/custom_text_field.dart';
-import '../../../../../../core/widgets/common/custom_snackbar.dart';
+import '../../../../../../core/utils/awesome_snackbar_extensions.dart';
 import '../../../../../../core/utils/app_validators.dart';
 import '../../../../domain/models/auth_models.dart';
 
@@ -129,7 +129,7 @@ class _LoginFormState extends State<LoginForm> {
   Future<void> _submit() async {
     if (widget.isSubmitting) return;
     if (!_formKey.currentState!.validate()) {
-      CustomSnackbar.error(context, 'يرجى تصحيح بيانات الدخول');
+      context.showErrorSnackbar('يرجى تصحيح بيانات الدخول');
       return;
     }
     await widget.onSubmit(

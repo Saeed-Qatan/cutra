@@ -7,12 +7,28 @@ class PasswordRecoveryState {
   final bool isSubmitting;
   final bool isSuccess;
   final String? error;
+  final String? recipientEmail;
 
   const PasswordRecoveryState({
     this.isSubmitting = false,
     this.isSuccess = false,
     this.error,
+    this.recipientEmail,
   });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PasswordRecoveryState &&
+          runtimeType == other.runtimeType &&
+          isSubmitting == other.isSubmitting &&
+          isSuccess == other.isSuccess &&
+          error == other.error &&
+          recipientEmail == other.recipientEmail;
+
+  @override
+  int get hashCode =>
+      Object.hash(isSubmitting, isSuccess, error, recipientEmail);
 }
 
 final passwordRecoveryViewModelProvider =
@@ -37,20 +53,27 @@ class PasswordRecoveryViewModel extends Notifier<PasswordRecoveryState> {
 
   /// Validates [email] locally and transitions to the success state.
   Future<void> submit(String email) async {
-    if (state.isSubmitting || state.isSuccess) return;
+    if (state.isSubmitting) return;
     final error = AppValidators.email(email);
     if (error != null) {
       state = PasswordRecoveryState(error: error);
       return;
     }
 
-    state = const PasswordRecoveryState(isSubmitting: true);
+    final normalizedEmail = email.trim();
+    state = PasswordRecoveryState(
+      isSubmitting: true,
+      recipientEmail: normalizedEmail,
+    );
 
     // [TECH-DEBT]: Replace with real API call when backend is ready.
     await Future.delayed(const Duration(milliseconds: 900));
 
     if (!_active) return;
-    state = const PasswordRecoveryState(isSuccess: true);
+    state = PasswordRecoveryState(
+      isSuccess: true,
+      recipientEmail: normalizedEmail,
+    );
   }
 
   /// Resets to initial state so the user can try again.

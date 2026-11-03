@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../../../../core/widgets/common/custom_button.dart';
 import '../../../../../../core/widgets/common/custom_text_field.dart';
-import '../../../../../../core/widgets/common/custom_snackbar.dart';
+import '../../../../../../core/utils/awesome_snackbar_extensions.dart';
 import '../../../../../../core/utils/app_validators.dart';
 import '../../../../domain/models/auth_models.dart';
 
@@ -235,7 +235,7 @@ class _RegisterFormState extends State<RegisterForm> {
         }
         break;
       }
-      CustomSnackbar.error(context, 'يرجى تصحيح بيانات التسجيل');
+      context.showErrorSnackbar('يرجى تصحيح بيانات التسجيل');
       return;
     }
 
